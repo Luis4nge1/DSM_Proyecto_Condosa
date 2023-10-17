@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Avance_Proyecto</string>
+    <string name="pendiente">Pendiente</string>
+    <string name="cotizado">Cotizado</string>
+    <string name="observado">Observado</string>
+    <string name="anulado">Anulado</string>
+</resources>
