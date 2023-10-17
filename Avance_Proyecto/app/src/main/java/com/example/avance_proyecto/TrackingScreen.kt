@@ -214,7 +214,8 @@ fun buttonSection(
             }
         }
         if(selectedChipIndex==0){
-            PieChartScreen()
+            //PieChartScreen()
+            LineChartScreen()
         }else{
             if(selectedChipIndex==1){
                 BarChartScreen()
@@ -305,7 +306,7 @@ fun TopicCard(topic: TrackingTopic, modifier: Modifier = Modifier) {
                 .padding(15.dp)
         ) {
             Text(
-                text = "hola \n58",
+                text = stringResource(topic.name)+"\n58",
                 style = MaterialTheme.typography.bodyLarge,
                 lineHeight = 26.sp,
                 modifier = Modifier.align(Alignment.TopStart)
@@ -393,6 +394,8 @@ fun TopicCuadricula(topicList: List<TrackingTopic>, modifier: Modifier = Modifie
     }
 }
 
+
+//solo de prueba, no se usa
 @Composable
 fun Chart() {
     Box(
@@ -426,6 +429,8 @@ fun Chart() {
     }
 }
 
+
+//de prueba, no se usa
 @Composable
 fun ButtonWithIndicator(text: String, isActive: Boolean, onClick: () -> Unit) {
     val buttonColor = if (isActive) Color.Transparent else Color.Gray
