@@ -1,6 +1,7 @@
 package com.example.avance_proyecto.screen
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -24,18 +25,26 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -47,6 +56,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -57,6 +67,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,9 +98,11 @@ import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.avance_proyecto.R
 import com.example.avance_proyecto.data.TrackingDataSource
+import com.example.avance_proyecto.model.SearchState
 import com.example.avance_proyecto.model.TrackingCard
 import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.OrderViewModel
+import com.example.avance_proyecto.ui.SearchViewModel
 import com.example.avance_proyecto.ui.standardQuadFromTo
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
 import com.example.avance_proyecto.ui.theme.ButtonBlue
@@ -97,9 +110,39 @@ import com.example.avance_proyecto.ui.theme.DarkerButtonBlue
 import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 
+
 @Composable
 fun TrackingAppBar(
     navigateUp: () -> Unit,
+    searchWidgetState: SearchState,
+    searchTextState: String,
+    onTextChange: (String) -> Unit,
+    onCloseClicked: () -> Unit,
+    onSearchClicked: (String) -> Unit,
+    onSearchTriggered: () -> Unit
+) {
+    when (searchWidgetState) {
+        SearchState.CLOSED -> {
+            DefaultTrackingAppBar(
+                navigateUp,
+                onSearchClicked = onSearchTriggered
+            )
+        }
+        SearchState.OPENED -> {
+            SearchTrackingAppBar(
+                text = searchTextState,
+                onTextChange = onTextChange,
+                onCloseClicked = onCloseClicked,
+                onSearchClicked = onSearchClicked
+            )
+        }
+    }
+}
+
+@Composable
+fun DefaultTrackingAppBar(
+    navigateUp: () -> Unit,
+    onSearchClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
@@ -111,13 +154,27 @@ fun TrackingAppBar(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = "Hola, John Doe", color = Color.White)
-                Image(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .padding(8.dp),
-                    painter = painterResource(R.drawable.user),
-                    contentDescription = null
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { onSearchClicked() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search Icon",
+                            tint = Color.White
+                        )
+                    }
+                    Image(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .padding(8.dp),
+                        painter = painterResource(R.drawable.user),
+                        contentDescription = null
+                    )
+                }
+
             }
 
 
@@ -138,9 +195,89 @@ fun TrackingAppBar(
 }
 
 @Composable
+fun SearchTrackingAppBar(
+    text: String,
+    onTextChange: (String) -> Unit,
+    onCloseClicked: () -> Unit,
+    onSearchClicked: (String) -> Unit,
+){
+    val context = LocalContext.current
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        color = backgroundPrincipal
+    ){
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = text,
+            onValueChange = {
+                onTextChange(it)
+            },
+            placeholder = {
+                Text(
+                    modifier = Modifier
+                        .alpha(0.5f),
+                    text = "Buscar...",
+                    color = Color.Black
+                )
+            },
+            textStyle = LocalTextStyle.current,
+            singleLine = true,
+            leadingIcon = {
+                IconButton(
+                    modifier = Modifier
+                        .alpha(0.5f),
+                    onClick = {}
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search Icon",
+                        tint = Color.Black
+                    )
+                }
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        if (text.isNotEmpty()) {
+                            onTextChange("")
+                        } else {
+                            onCloseClicked()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close Icon",
+                        tint = Color.Black.copy(alpha = 0.5f)
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    showToastTracking(context, "Buscando la palabra: $text")
+                    onSearchClicked(text)
+                }
+            ),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.Black.copy(alpha = 0.5f),
+                cursorColor = Color.Black.copy(alpha = 0.5f)
+            )
+        )
+    }
+}
+
+@Composable
 fun TrackingScreen(
     navController: NavController,
     viewModel: OrderViewModel = viewModel(),
+    mainViewModel: SearchViewModel = SearchViewModel(),
     modifier: Modifier = Modifier
 ) {
     //val backStackEntry by navController.currentBackStackEntryAsState()
@@ -149,10 +286,27 @@ fun TrackingScreen(
         backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
     )*/
 
+    val searchWidgetState by mainViewModel.searchWidgetState
+    val searchTextState by mainViewModel.searchTextState
+
     Scaffold(
         topBar = {
             TrackingAppBar(
-                navigateUp = { navController.navigateUp() }
+                navigateUp = { navController.navigateUp() },
+                searchWidgetState = searchWidgetState,
+                searchTextState = searchTextState,
+                onTextChange = {
+                    mainViewModel.updateSearchTextState(newValue = it)
+                },
+                onCloseClicked = {
+                    mainViewModel.updateSearchWidgetState(newValue = SearchState.CLOSED)
+                },
+                onSearchClicked = {
+                    Log.d("Searched Text", it)
+                },
+                onSearchTriggered = {
+                    mainViewModel.updateSearchWidgetState(newValue = SearchState.OPENED)
+                }
             )
         }
     ) { innerPadding ->
@@ -526,85 +680,3 @@ fun PieChartScreen(){
 fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
-
-//solo de prueba, no se usa
-
-/*
-@Composable
-fun Chart() {
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        val context = LocalContext.current
-        Column() {
-            var isBox1Visible by remember { mutableStateOf(true) }
-
-            Row{
-                Button(onClick = {
-                    isBox1Visible = !isBox1Visible
-                }) {
-                    Text(text = "Cambiar")
-                }
-                Button(onClick = {
-                    isBox1Visible = true
-                }) {
-                    Text(text = "Volver")
-                }
-            }
-
-            if (isBox1Visible) {
-                YellowBox("Primera Caja")
-            } else {
-                YellowBox("Segunda Caja")
-            }
-
-
-        }
-    }
-}
-
-
-//de prueba, no se usa
-@Composable
-fun ButtonWithIndicator(text: String, isActive: Boolean, onClick: () -> Unit) {
-    val buttonColor = if (isActive) Color.Transparent else Color.Gray
-    val indicatorColor = if (isActive) Color.Green else Color.Transparent
-
-    val context = LocalContext.current
-
-    Column(
-        modifier = Modifier
-            .clickable { onClick() }
-    ) {
-        Button(
-            onClick = { showToastTracking(context, "Hola $text") },
-            colors = ButtonDefaults.buttonColors(
-                Color.Blue,
-                Color.White
-            )
-        ) {
-            Text(text = text)
-        }
-    }
-}
-
-@Composable
-fun YellowBox(text: String) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clip(MaterialTheme.shapes.medium)
-            .background(Color.Black)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = text, fontSize = 20.sp)
-        }
-    }
-}
-*/
