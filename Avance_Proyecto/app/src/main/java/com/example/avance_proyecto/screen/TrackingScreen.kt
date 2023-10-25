@@ -1,7 +1,6 @@
-package com.example.avance_proyecto
+package com.example.avance_proyecto.screen
 
 import android.content.Context
-import android.graphics.Paint.Align
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,7 +51,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -65,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import co.yml.charts.axis.AxisData
 import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.PlotType
@@ -87,8 +85,10 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
+import com.example.avance_proyecto.R
 import com.example.avance_proyecto.data.TrackingDataSource
-import com.example.avance_proyecto.model.TrackingTopic
+import com.example.avance_proyecto.model.TrackingCard
+import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.OrderViewModel
 import com.example.avance_proyecto.ui.standardQuadFromTo
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
@@ -99,7 +99,6 @@ import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 
 @Composable
 fun TrackingAppBar(
-    canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -111,7 +110,7 @@ fun TrackingAppBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Hola, John Doe")
+                Text(text = "Hola, John Doe", color = Color.White)
                 Image(
                     modifier = Modifier
                         .size(64.dp)
@@ -126,8 +125,7 @@ fun TrackingAppBar(
             colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = backgroundPrincipal
         ),
-        navigationIcon = {/*
-            if (canNavigateBack) {*/
+        navigationIcon = {
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
@@ -135,15 +133,14 @@ fun TrackingAppBar(
                         tint = Color.White
                     )
                 }
-          //  }
         }
     )
 }
 
 @Composable
-fun TrackingApp(
+fun TrackingScreen(
+    navController: NavController,
     viewModel: OrderViewModel = viewModel(),
-    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
     //val backStackEntry by navController.currentBackStackEntryAsState()
@@ -155,7 +152,6 @@ fun TrackingApp(
     Scaffold(
         topBar = {
             TrackingAppBar(
-                canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
             )
         }
@@ -167,18 +163,19 @@ fun TrackingApp(
                 .background(backgroundPrincipal)
                 .fillMaxSize()
         ) {
-            buttonSection(listOf("Distribución","Tendencia","Evolución"))
+            ButtonSectionTracking(listOf("Distribución","Tendencia","Evolución"))
 
             val tracking = TrackingDataSource.itemCardTracking
             TopicCuadricula(
-                topicList = tracking
+                topicList = tracking,
+                navController = navController
             )
         }
     }
 }
 
 @Composable
-fun buttonSection(
+fun ButtonSectionTracking(
     botones: List<String>
 ) {
     val context = LocalContext.current
@@ -193,7 +190,7 @@ fun buttonSection(
             items(botones.size) {
                 Button(
                     onClick = {
-                        showToast(context, "Hola $it")
+                        showToastTracking(context, "Hola $it")
                         selectedChipIndex = it
                     },
                     modifier = Modifier
@@ -214,32 +211,28 @@ fun buttonSection(
             }
         }
         if(selectedChipIndex==0){
-            //PieChartScreen()
-            LineChartScreen()
+            PieChartScreen()
         }else{
             if(selectedChipIndex==1){
                 BarChartScreen()
             }else{
                 LineChartScreen()
             }
-            //YellowBox("$selectedChipIndex Caja")
         }
     }
 }
 
 @Preview
 @Composable
-fun WoofPreview() {
+fun TrackingScreenPreview() {
     Avance_ProyectoTheme(darkTheme = false) {
-        TrackingApp()
+        //TrackingScreen()
     }
 }
 
 @Composable
-fun TopicCard(topic: TrackingTopic, modifier: Modifier = Modifier) {
+fun TopicCard(topic: TrackingCard, navController: NavController, modifier: Modifier = Modifier) {
 
-    val context = LocalContext.current
-    
     BoxWithConstraints(
         modifier = Modifier
             .padding(7.5.dp)
@@ -306,17 +299,11 @@ fun TopicCard(topic: TrackingTopic, modifier: Modifier = Modifier) {
                 .padding(15.dp)
         ) {
             Text(
-                text = stringResource(topic.name)+"\n58",
+                text = stringResource(topic.name)+"\n"+ topic.cantidad.toString(),
                 style = MaterialTheme.typography.bodyLarge,
                 lineHeight = 26.sp,
                 modifier = Modifier.align(Alignment.TopStart)
             )
-            /*Text(
-                text = "58",
-                style = MaterialTheme.typography.bodyMedium,
-                lineHeight = 26.sp,
-                modifier = Modifier.align(Alignment.CenterStart)
-            )*/
             Image(
                 painter = painterResource(id = topic.imageRes),
                 contentDescription = stringResource(topic.name),
@@ -326,14 +313,13 @@ fun TopicCard(topic: TrackingTopic, modifier: Modifier = Modifier) {
                 contentScale = ContentScale.FillWidth
             )
             Text(
-                text = "Start",
+                text = "Ver más",
                 color = TextWhite,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .clickable {
-                        // Handle the click
-                        showToast(context, "Hola")
+                        navController.navigate(route = AppScreen.solicitudScreen.route)
                     }
                     .align(Alignment.BottomEnd)
                     .clip(RoundedCornerShape(10.dp))
@@ -343,44 +329,11 @@ fun TopicCard(topic: TrackingTopic, modifier: Modifier = Modifier) {
         }
 
     }
-    /*Card(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp, 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ){
-
-                Image(
-                    painter = painterResource(topic.imageRes),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 55.dp, height = 60.dp),
-                    contentScale = ContentScale.FillWidth
-                )
-
-            Column{
-                Text(
-                    text = topic.cantidad.toString(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(
-                        start = 8.dp)
-                )
-                Text(
-                    text = stringResource(id = topic.name),
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                )
-            }
-        }*/
-
 
 }
 
 @Composable
-fun TopicCuadricula(topicList: List<TrackingTopic>, modifier: Modifier = Modifier){
+fun TopicCuadricula(topicList: List<TrackingCard>, navController: NavController, modifier: Modifier = Modifier){
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -389,97 +342,7 @@ fun TopicCuadricula(topicList: List<TrackingTopic>, modifier: Modifier = Modifie
     ) {
 
         items(topicList) { topic ->
-            TopicCard(topic)
-        }
-    }
-}
-
-
-//solo de prueba, no se usa
-@Composable
-fun Chart() {
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        val context = LocalContext.current
-        Column() {
-            var isBox1Visible by remember { mutableStateOf(true) }
-
-            Row{
-                Button(onClick = {
-                    isBox1Visible = !isBox1Visible
-                }) {
-                    Text(text = "Cambiar")
-                }
-                Button(onClick = {
-                    isBox1Visible = true
-                }) {
-                    Text(text = "Volver")
-                }
-            }
-
-            if (isBox1Visible) {
-                YellowBox("Primera Caja")
-            } else {
-                YellowBox("Segunda Caja")
-            }
-
-
-        }
-    }
-}
-
-
-//de prueba, no se usa
-@Composable
-fun ButtonWithIndicator(text: String, isActive: Boolean, onClick: () -> Unit) {
-    val buttonColor = if (isActive) Color.Transparent else Color.Gray
-    val indicatorColor = if (isActive) Color.Green else Color.Transparent
-
-    val context = LocalContext.current
-
-    Column(
-        modifier = Modifier
-            .clickable { onClick() }
-    ) {
-        Button(
-            onClick = { showToast(context, "Hola $text") },
-            colors = ButtonDefaults.buttonColors(
-                Color.Blue,
-                Color.White
-            )
-        ) {
-            Text(text = text)
-        }
-    }
-}
-
-@Composable
-fun ButtonWithoutBackground(text: String, onClick: () -> Unit) {
-    TextButton(
-        onClick = onClick,
-        modifier = Modifier.border(1.dp, Color.Black)
-    ) {
-        Text(text = text)
-    }
-}
-
-@Composable
-fun YellowBox(text: String) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clip(MaterialTheme.shapes.medium)
-            .background(Color.Black)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = text, fontSize = 20.sp)
+            TopicCard(topic, navController)
         }
     }
 }
@@ -622,9 +485,9 @@ fun BarChartScreen(){
 fun PieChartScreen(){
     val donutChartData = PieChartData(
         slices = listOf(
-            PieChartData.Slice("HP", 20f, Color(0xFF5F0A87),),
-            PieChartData.Slice("Dell", 30f, Color(0xFF20BF55),),
-            PieChartData.Slice("Lenovo", 40f,  Color(0xFFEC9F05),),
+            PieChartData.Slice("HP", 20f, Color(0xFF5F0A87)),
+            PieChartData.Slice("Dell", 30f, Color(0xFF20BF55)),
+            PieChartData.Slice("Lenovo", 40f,  Color(0xFFEC9F05)),
             PieChartData.Slice("Asus", 10f, Color(0xFFF53844))
         ),
         plotType = PlotType.Pie
@@ -660,7 +523,88 @@ fun PieChartScreen(){
 
 }
 
-fun showToast(context: Context, message: String) {
+fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
+//solo de prueba, no se usa
+
+/*
+@Composable
+fun Chart() {
+    Box(
+        contentAlignment = Alignment.Center
+    ) {
+        val context = LocalContext.current
+        Column() {
+            var isBox1Visible by remember { mutableStateOf(true) }
+
+            Row{
+                Button(onClick = {
+                    isBox1Visible = !isBox1Visible
+                }) {
+                    Text(text = "Cambiar")
+                }
+                Button(onClick = {
+                    isBox1Visible = true
+                }) {
+                    Text(text = "Volver")
+                }
+            }
+
+            if (isBox1Visible) {
+                YellowBox("Primera Caja")
+            } else {
+                YellowBox("Segunda Caja")
+            }
+
+
+        }
+    }
+}
+
+
+//de prueba, no se usa
+@Composable
+fun ButtonWithIndicator(text: String, isActive: Boolean, onClick: () -> Unit) {
+    val buttonColor = if (isActive) Color.Transparent else Color.Gray
+    val indicatorColor = if (isActive) Color.Green else Color.Transparent
+
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .clickable { onClick() }
+    ) {
+        Button(
+            onClick = { showToastTracking(context, "Hola $text") },
+            colors = ButtonDefaults.buttonColors(
+                Color.Blue,
+                Color.White
+            )
+        ) {
+            Text(text = text)
+        }
+    }
+}
+
+@Composable
+fun YellowBox(text: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clip(MaterialTheme.shapes.medium)
+            .background(Color.Black)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = text, fontSize = 20.sp)
+        }
+    }
+}
+*/

@@ -4,4 +4,13 @@
     <string name="cotizado">Cotizado</string>
     <string name="observado">Observado</string>
     <string name="anulado">Anulado</string>
+
+    <string name="num_solicitado">Número de solicitud:</string>
+    <string name="nombre_solicitante">Nombre del Solicitante:</string>
+    <string name="fecha_solicitud">Fecha de solicitud:</string>
+    <string name="predio">Predio:</string>
+    <string name="area_predio">Área del predio:</string>
+    <string name="num_casa_habitacion">N° de Casas-Habitación:</string>
+    <string name="servicio_solicitado">Servicio solicitado:</string>
+    <string name="area_comun">Areas comunes:</string>
 </resources>

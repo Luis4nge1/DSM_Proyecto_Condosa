@@ -1,6 +1,6 @@
 package com.example.avance_proyecto.data
 
-data class OrderUiState(
+data class TrackingUiState(
     /** nombre del usuario */
     val name: String = "John Doe",
     /** (0 = distribucion, 1 = tendencia, 2 = evolucion) */

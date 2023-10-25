@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 
-data class TrackingTopic(
+data class TrackingCard(
     @StringRes val name: Int,
     val cantidad: Int,
     @DrawableRes val imageRes: Int,

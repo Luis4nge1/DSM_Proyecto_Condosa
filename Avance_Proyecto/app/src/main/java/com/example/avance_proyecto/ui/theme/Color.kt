@@ -29,3 +29,6 @@ val LightGreen3 = Color(0xff11d79b)
 val BlueViolet1 = Color(0xffaeb4fd)
 val BlueViolet2 = Color(0xff9fa5fe)
 val BlueViolet3 = Color(0xff8f98fd)
+
+val ButtonColorDefault = Color(0xFF3861A7)
+val ButtonColorRed = Color(0xFF8A2F2F)
