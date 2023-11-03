@@ -1,4 +1,4 @@
-package com.example.avance_proyecto.ui
+package com.example.avance_proyecto.ui.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State

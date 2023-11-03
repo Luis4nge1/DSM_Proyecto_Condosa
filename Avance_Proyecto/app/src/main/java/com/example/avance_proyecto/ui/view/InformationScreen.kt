@@ -1,4 +1,4 @@
-package com.example.avance_proyecto.screen
+package com.example.avance_proyecto.ui.view
 
 import android.content.Context
 import android.widget.Toast
@@ -39,8 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.avance_proyecto.data.TrackingDataSource
 import com.example.avance_proyecto.navigation.AppScreen
-import com.example.avance_proyecto.ui.InformationViewModel
-import com.example.avance_proyecto.ui.OrderViewModel
+import com.example.avance_proyecto.ui.viewmodel.InformationViewModel
 import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
 import com.example.avance_proyecto.ui.theme.TextWhite

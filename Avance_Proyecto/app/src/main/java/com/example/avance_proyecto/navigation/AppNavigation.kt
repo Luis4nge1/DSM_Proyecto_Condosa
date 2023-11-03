@@ -1,15 +1,13 @@
 package com.example.avance_proyecto.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.example.avance_proyecto.screen.HomeScreen
-import com.example.avance_proyecto.screen.InformationScreen
-import com.example.avance_proyecto.screen.SolicitudScreen
-import com.example.avance_proyecto.screen.TrackingScreen
+import com.example.avance_proyecto.ui.view.HomeScreen
+import com.example.avance_proyecto.ui.view.InformationScreen
+import com.example.avance_proyecto.ui.view.SolicitudScreen
+import com.example.avance_proyecto.ui.view.TrackingScreen
 
 @Composable
 fun AppNavigation(){

@@ -1,4 +1,4 @@
-package com.example.avance_proyecto.ui
+package com.example.avance_proyecto.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.avance_proyecto.data.InformationUiState

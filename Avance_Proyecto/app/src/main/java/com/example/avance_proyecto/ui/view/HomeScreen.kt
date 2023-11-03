@@ -1,4 +1,4 @@
-package com.example.avance_proyecto.screen
+package com.example.avance_proyecto.ui.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
