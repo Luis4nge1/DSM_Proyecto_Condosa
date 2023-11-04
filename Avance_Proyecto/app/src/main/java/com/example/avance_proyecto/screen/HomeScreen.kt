@@ -10,8 +10,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.avance_proyecto.navigation.AppScreen
+import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
 
 @Composable
 fun HomeScreen(navController: NavController){
@@ -38,5 +41,14 @@ fun BodyContentHome(navController: NavController){
         }) {
             Text(text = "Seguimiento")
         }
+    }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    Avance_ProyectoTheme(darkTheme = false) {
+        val navController = rememberNavController()
+        HomeScreen(navController = navController)
     }
 }

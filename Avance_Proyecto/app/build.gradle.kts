@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.avance_proyecto"
+    namespace = "com.example.apiapp"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.example.avance_proyecto"
-        minSdk = 26
+        applicationId = "com.example.apiapp"
+        minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -35,7 +35,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
     }
     buildFeatures {
         compose = true
@@ -52,7 +51,16 @@ android {
 
 dependencies {
 
-    implementation("co.yml:ycharts:2.1.0")
+    //viewmodel
+    //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    //implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    //implementation("androidx.activity:activity-ktx:1.7.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.2.1")//----
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -62,9 +70,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -72,12 +78,4 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.6.0")
-
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.extra["lifecycle_version"]}")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.extra["lifecycle_version"]}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.extra["lifecycle_version"]}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${rootProject.extra["lifecycle_version"]}")
-    implementation("androidx.navigation:navigation-compose:2.6.0")
-
 }
