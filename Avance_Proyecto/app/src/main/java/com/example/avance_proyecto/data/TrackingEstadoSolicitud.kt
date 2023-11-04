@@ -1,4 +1,6 @@
 import com.example.avance_proyecto.data.APIService
+import com.example.avance_proyecto.data.Data
+import com.example.avance_proyecto.data.DataEstadoSolicitud
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +46,7 @@ object TrackingEstadoSolicitud {
     }
 
     // Función para obtener datos de la API
-    suspend fun getTrackingData(): List<EstadoSolicitud>? {
+    suspend fun getTrackingData(): List<Data>? {
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.getEstadoSolicitudes("estado_solicitud")
