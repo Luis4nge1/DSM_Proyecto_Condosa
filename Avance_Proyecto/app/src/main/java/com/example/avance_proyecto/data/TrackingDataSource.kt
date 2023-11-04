@@ -6,6 +6,9 @@ import com.example.avance_proyecto.model.TrackingCard
 import com.example.avance_proyecto.ui.theme.*
 
 object TrackingDataSource {
+
+
+
     val itemCardTracking = listOf(
         TrackingCard(
             R.string.pendiente, 58, R.drawable.pendiente_image,

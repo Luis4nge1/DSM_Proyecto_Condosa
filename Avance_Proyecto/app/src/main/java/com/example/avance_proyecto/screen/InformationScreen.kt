@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.avance_proyecto.data.TrackingDataSource
 import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.InformationViewModel
@@ -47,8 +47,6 @@ import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
 import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
-import androidx.navigation.compose.rememberNavController
-
 
 @Composable
 fun InformationScreen2(navController: NavController){
@@ -65,9 +63,9 @@ fun InformationScreen2(navController: NavController){
 @Composable
 fun BodyContentInformation(navController: NavController){
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text(text = "¡Bienvenido a la pantalla de solicitudes!")
         Button(onClick = {
@@ -79,25 +77,25 @@ fun BodyContentInformation(navController: NavController){
 }
 
 @Composable
-fun <NavController> InformationScreen(
-    navController: NavController,
-    viewModel: InformationViewModel = viewModel(),
-    modifier: Modifier = Modifier
+fun InformationScreen(
+        navController: NavController,
+        viewModel: InformationViewModel = viewModel(),
+        modifier: Modifier = Modifier
 ){
     val tracking = TrackingDataSource.itemCardInformation
 
     Scaffold(
-        topBar = {
-            TrackingAppBarInformation(
-                navigateUp = { navController.navigateUp() }
-            )
-        }
+            topBar = {
+                TrackingAppBarInformation(
+                        navigateUp = { navController.navigateUp() }
+                )
+            }
     ){ innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .background(backgroundPrincipal)
-                .fillMaxSize()
+                modifier = Modifier
+                        .padding(innerPadding)
+                        .background(backgroundPrincipal)
+                        .fillMaxSize()
         ) {
             items(1) {
                 tracking.forEach { it->
@@ -123,62 +121,61 @@ fun <NavController> InformationScreen(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackingAppBarInformation(
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
+        navigateUp: () -> Unit,
+        modifier: Modifier = Modifier
 ){
     TopAppBar(
-        modifier = Modifier.background(backgroundPrincipal),
-        title = {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Información de la solicitud",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
+            modifier = Modifier.background(backgroundPrincipal),
+            title = {
+                Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                            text = "Información de la solicitud",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                    )
 
+                }
+
+
+            },
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = backgroundPrincipal
+            ),
+            navigationIcon = {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                    )
+                }
             }
-
-
-        },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = backgroundPrincipal
-        ),
-        navigationIcon = {
-            IconButton(onClick = navigateUp) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.White
-                )
-            }
-        }
     )
 }
 
 @Composable
 fun cardInformation(label: String, data: String, modifier: Modifier = Modifier){
     Card(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
     ){
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text= label,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(end=16.dp)
+                    text= label,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(end=16.dp)
             )
             Text(text = data)
         }
@@ -190,7 +187,7 @@ fun cardInformation(label: String, data: String, modifier: Modifier = Modifier){
 
 @Composable
 fun ButtonSection(
-    botones: List<String>, title: String/*,
+        botones: List<String>, title: String/*,
     popUpViewModel: PopUpViewModel= viewModel()*/
 ) {
     val context = LocalContext.current
@@ -201,34 +198,34 @@ fun ButtonSection(
     }
 
     Column(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
     ){
         Text(
-            text=title,
-            color= Color.White,
-            modifier = Modifier.padding(bottom=10.dp)
+                text=title,
+                color= Color.White,
+                modifier = Modifier.padding(bottom=10.dp)
         )
         LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             items(botones.size) {
                 Button(
-                    onClick = {
-                        showToastInformation(context, "Hola $it")
-                        selectedChipIndex = it
-                    },
-                    /*modifier = Modifier
-                        .padding(start = 15.dp, top = 15.dp, bottom = 15.dp),*/
-                    colors = ButtonDefaults.buttonColors(
-                        if (botones[it].equals("Anular")) {
-                            ButtonColorRed
-                        } else {
-                            ButtonColorDefault
+                        onClick = {
+                            showToastInformation(context, "Hola $it")
+                            selectedChipIndex = it
                         },
-                        Color.White
-                    ),
-                    shape = MaterialTheme.shapes.small
+                        /*modifier = Modifier
+                            .padding(start = 15.dp, top = 15.dp, bottom = 15.dp),*/
+                        colors = ButtonDefaults.buttonColors(
+                                if (botones[it].equals("Anular")) {
+                                    ButtonColorRed
+                                } else {
+                                    ButtonColorDefault
+                                },
+                                Color.White
+                        ),
+                        shape = MaterialTheme.shapes.small
                 ) {
                     Text(text = botones[it], color = TextWhite)
                 }
@@ -240,7 +237,6 @@ fun ButtonSection(
 fun showToastInformation(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
-
 @Preview
 @Composable
 fun InformationScreenPreview() {

@@ -10,8 +10,10 @@ class EstadoSolicitudRepository {
     suspend fun getEstadoSolicitudRepository() : Result<DataEstadoSolicitud>{
         return try {
             val response = service.listEstadoSolicitud()
+            println("TODO BIEN")
             Result.success(response)
         }catch (e: Exception){
+            println("TODO MAL")
             Result.failure(e)
         }
     }

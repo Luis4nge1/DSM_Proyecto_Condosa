@@ -7,9 +7,8 @@ class DataUseCase {
 
     private val repository = EstadoSolicitudRepository()
 
-    suspend fun getEstadoSolicitudUC(): Result<DataEstadoSolicitud> {
+    suspend fun getEstadoSolicitud(): Result<DataEstadoSolicitud> {
         return repository.getEstadoSolicitudRepository()
     }
-
 
 }

@@ -1,12 +1,12 @@
 package com.example.avance_proyecto.screen
 
-import TrackingEstadoSolicitud.getTrackingData
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +42,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -49,7 +50,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -97,7 +97,6 @@ import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.avance_proyecto.R
-import com.example.avance_proyecto.data.APIService
 import com.example.avance_proyecto.data.TrackingDataSource
 import com.example.avance_proyecto.model.SearchState
 import com.example.avance_proyecto.model.TrackingCard
@@ -110,6 +109,7 @@ import com.example.avance_proyecto.ui.theme.ButtonBlue
 import com.example.avance_proyecto.ui.theme.DarkerButtonBlue
 import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
+import com.example.avance_proyecto.ui.viewmodel.EstadoSolicitudViewModel
 
 
 @Composable
@@ -139,6 +139,7 @@ fun TrackingAppBar(
         }
     }
 }
+
 
 @Composable
 fun DefaultTrackingAppBar(
@@ -179,18 +180,18 @@ fun DefaultTrackingAppBar(
             }
 
 
-                },
-            colors = TopAppBarDefaults.mediumTopAppBarColors(
+        },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = backgroundPrincipal
         ),
         navigationIcon = {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
-                }
+            IconButton(onClick = navigateUp) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
+            }
         }
     )
 }
@@ -273,6 +274,7 @@ fun SearchTrackingAppBar(
         )
     }
 }
+
 @Composable
 fun TrackingScreen(
     navController: NavController,
@@ -285,17 +287,11 @@ fun TrackingScreen(
     /*val currentScreen = CupcakeScreen.valueOf(
         backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
     )*/
+    Log.d("EstadoSolicitudViewModel", "TODO BIEN")
+    val estadoSolicitudData: EstadoSolicitudViewModel = viewModel()
 
     val searchWidgetState by mainViewModel.searchWidgetState
     val searchTextState by mainViewModel.searchTextState
-
-    // Obtener datos de la API
-    LaunchedEffect(Unit) {
-        val trackingData = getTrackingData()
-        if (trackingData != null) {
-            mainViewModel.updateTrackingData(trackingData)
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -327,7 +323,8 @@ fun TrackingScreen(
         ) {
             ButtonSectionTracking(listOf("Distribución","Tendencia","Evolución"))
 
-            val tracking = TrackingDataSource.itemCardTracking //Estados de solicitudes (Pendiente, Cotizado, Observado y Anulado)
+            val datos = estadoSolicitudData
+            val tracking = TrackingDataSource.itemCardTracking
             TopicCuadricula(
                 topicList = tracking,
                 navController = navController
@@ -335,7 +332,6 @@ fun TrackingScreen(
         }
     }
 }
-
 
 @Composable
 fun ButtonSectionTracking(
@@ -390,12 +386,9 @@ fun ButtonSectionTracking(
 fun TrackingScreenPreview() {
     Avance_ProyectoTheme(darkTheme = false) {
         val navController = rememberNavController()
-        Surface {
-            TrackingScreen(navController)
-        }
+        TrackingScreen(navController = navController)
     }
 }
-
 
 @Composable
 fun TopicCard(topic: TrackingCard, navController: NavController, modifier: Modifier = Modifier) {
@@ -693,4 +686,3 @@ fun PieChartScreen(){
 fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
-

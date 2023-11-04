@@ -17,14 +17,17 @@ class EstadoSolicitudViewModel : ViewModel() {
     val estadosolicitudResult: LiveData<DataEstadoSolicitud> = _estadosolicitudResult
 
     init{
+        println("HOLA2")
         getEstadoSolicitud()
     }
 
     private fun getEstadoSolicitud(){
+        println("HOLA")
         viewModelScope.launch(Dispatchers.IO){
-            obtenerDatosUseCase.getEstadoSolicitudUC().onSuccess {
+            obtenerDatosUseCase.getEstadoSolicitud().onSuccess {
                 _estadosolicitudResult.postValue(it)
-                println(it)
+                //println(it)
+                println("TODO BIEN")
             }.onFailure {
                 println("ALGO PASÓ")
             }
