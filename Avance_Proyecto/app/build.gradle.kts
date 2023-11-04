@@ -54,9 +54,13 @@ dependencies {
 
     implementation("co.yml:ycharts:2.1.0")
 
+<<<<<<< HEAD
     //viewmodel
     //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+=======
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")//----
+>>>>>>> 52079d383da661d2629166dea83e9f3668f7ce62
     //implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     //implementation("androidx.activity:activity-ktx:1.7.1")
     implementation("androidx.compose.runtime:runtime-livedata:1.2.1")//----

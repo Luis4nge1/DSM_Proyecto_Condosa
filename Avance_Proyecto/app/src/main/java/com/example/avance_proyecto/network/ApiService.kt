@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.apiapp.network
 
 import com.example.avance_proyecto.data.DataEstadoSolicitud
@@ -14,5 +15,16 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("/estado_solicitud")
     suspend fun listEstadoSolicitud( ): DataEstadoSolicitud
+=======
+package com.example.avance_proyecto.network
+
+import com.example.avance_proyecto.data.model.EstadoSolicitud
+import retrofit2.http.GET
+
+interface ApiService {
+
+    @GET("/estadosolicitud")
+    suspend fun listProductoApiService( ): EstadoSolicitud
+>>>>>>> 52079d383da661d2629166dea83e9f3668f7ce62
 
 }

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Avance_Proyecto</string>
+    <string name="frame_name">SOLICITUDES</string>
+
     <string name="pendiente">Pendiente</string>
     <string name="cotizado">Cotizado</string>
     <string name="observado">Observado</string>
@@ -13,4 +15,43 @@
     <string name="num_casa_habitacion">N° de Casas-Habitación:</string>
     <string name="servicio_solicitado">Servicio solicitado:</string>
     <string name="area_comun">Areas comunes:</string>
+
+    <string name="nombrecompleto1">Fabrizzio Josias Quintana Vilca</string>
+    <string name="puesto1">(Presidente de la junta de propietarios)</string>
+    <string name="predio1">Los Girasoles</string>
+    <string name="ubicacion1">Lima (San Isidro)</string>
+    <string name="tiempo1">Hace 1 semana</string>
+
+    <string name="nombrecompleto2">Luis Angel Mayta Chipana</string>
+    <string name="puesto2">(Vicepresidente de la junta de propietarios)</string>
+    <string name="predio2">Los manantiales</string>
+    <string name="ubicacion2">Lima (Barranco)</string>
+    <string name="tiempo2">Hace 5 dias</string>
+
+
+    <string name="nombrecompleto3">Ivan Diego Saenz Cotrina</string>
+    <string name="puesto3">(Subpresidente de la junta de propietarios)</string>
+    <string name="predio3">Los manantiales</string>
+    <string name="ubicacion3">Lima (San Borja)</string>
+    <string name="tiempo3">Hace 3 dias</string>
+
+    <string name="nombrecompleto4">Dylan Bruno Gonzales Camarena</string>
+    <string name="puesto4">(Secretario del ministerio)</string>
+    <string name="predio4">El paraiso perdido</string>
+    <string name="ubicacion4">Lima (San Miguel)</string>
+    <string name="tiempo4">Hace 1 dia</string>
+
+    <string name="nombrecompleto5">Fabrizzio Josias Quintana Vilca</string>
+    <string name="puesto5">(Presidente de la junta de propietarios)</string>
+    <string name="predio5">Los Girasoles</string>
+    <string name="ubicacion5">Lima (San Isidro)</string>
+    <string name="tiempo5">Hace 2 horas</string>
+
+    <string name="nombrecompleto6">Fabrizzio Josias Quintana Vilca</string>
+    <string name="puesto6">(Presidente de la junta de propietarios)</string>
+    <string name="predio6">Los Girasoles</string>
+    <string name="ubicacion6">Lima (San Isidro)</string>
+    <string name="tiempo6">Hace 2 horas</string>
+
+
 </resources>
