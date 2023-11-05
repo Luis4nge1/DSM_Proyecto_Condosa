@@ -12,6 +12,7 @@ from routes.personal_routes import personal_routes
 from routes.area_comun_routes import area_comun_routes
 from routes.predio_area_comun_routes import predio_area_comun_routes
 from routes.estado_solicitud_routes import estado_solicitud_routes
+from routes.conteo_estado_solicitud_routes import conteo_estado_solicitud_routes
 from flask_sqlalchemy import SQLAlchemy
 from config import DATABASE_CONNECTION_URI
 from flask_cors import CORS
@@ -46,6 +47,7 @@ app.register_blueprint(personal_routes)
 app.register_blueprint(area_comun_routes)
 app.register_blueprint(predio_area_comun_routes)
 app.register_blueprint(estado_solicitud_routes)
+app.register_blueprint(conteo_estado_solicitud_routes)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
