@@ -1,17 +1,12 @@
-import com.example.avance_proyecto.data.APIService
-import com.example.avance_proyecto.data.Data
-import com.example.avance_proyecto.data.DataEstadoSolicitud
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object TrackingEstadoSolicitud {
 
-    private const val BASE_URL = "http://localhost:5000"  // Reemplaza con tu URL base
+   /* private const val BASE_URL = "http://localhost:5000"  // Reemplaza con tu URL base
     private fun getRetrofit():Retrofit{
         return Retrofit.Builder()
             .baseUrl("http://localhost:5000/")
@@ -43,10 +38,10 @@ object TrackingEstadoSolicitud {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(APIService::class.java)
-    }
+    }*/
 
     // Función para obtener datos de la API
-    suspend fun getTrackingData(): List<Data>? {
+    /*suspend fun getTrackingData(): List<Data>? {
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.getEstadoSolicitudes("estado_solicitud")
@@ -64,6 +59,6 @@ object TrackingEstadoSolicitud {
 
             return@withContext null
         }
-    }
+    }*/
 }
 

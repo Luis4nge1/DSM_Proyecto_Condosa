@@ -47,8 +47,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -62,7 +62,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -93,18 +92,34 @@ import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.avance_proyecto.R
 import com.example.avance_proyecto.data.TrackingDataSource
-import com.example.avance_proyecto.model.SearchState
+import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
+import com.example.avance_proyecto.data.model.ConteoEstadoSolicitudItem
+import com.example.avance_proyecto.data.model.EstadoSolicitud
+import com.example.avance_proyecto.data.model.EstadoSolicitudItems
+import com.example.avance_proyecto.data.uistate.SearchUiState
 import com.example.avance_proyecto.model.TrackingCard
 import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.viewmodel.OrderViewModel
 import com.example.avance_proyecto.ui.viewmodel.SearchViewModel
 import com.example.avance_proyecto.ui.standardQuadFromTo
+import com.example.avance_proyecto.ui.theme.Beige1
+import com.example.avance_proyecto.ui.theme.Beige2
+import com.example.avance_proyecto.ui.theme.Beige3
+import com.example.avance_proyecto.ui.theme.BlueViolet1
+import com.example.avance_proyecto.ui.theme.BlueViolet2
+import com.example.avance_proyecto.ui.theme.BlueViolet3
 import com.example.avance_proyecto.ui.theme.ButtonBlue
 import com.example.avance_proyecto.ui.theme.DarkerButtonBlue
+import com.example.avance_proyecto.ui.theme.LightGreen1
+import com.example.avance_proyecto.ui.theme.LightGreen2
+import com.example.avance_proyecto.ui.theme.LightGreen3
+import com.example.avance_proyecto.ui.theme.OrangeYellow1
+import com.example.avance_proyecto.ui.theme.OrangeYellow2
+import com.example.avance_proyecto.ui.theme.OrangeYellow3
 import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 import com.example.avance_proyecto.ui.viewmodel.EstadoSolicitudViewModel
-
+/*
 @Composable
 fun TrackingScreen(
     navController: NavController,
@@ -152,12 +167,76 @@ fun TrackingScreen(
             )
         }
     }
+}*/
+
+
+@Composable
+fun TrackingScreen(
+    navController: NavController,
+    viewModel: OrderViewModel = viewModel(),
+    mainViewModel: SearchViewModel = SearchViewModel(),
+    modifier: Modifier = Modifier
+) {
+    //val backStackEntry by navController.currentBackStackEntryAsState()
+    // Get the name of the current screen
+    /*val currentScreen = CupcakeScreen.valueOf(
+        backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
+    )*/
+
+    val conteoEstadoSolicitudData: EstadoSolicitudViewModel = viewModel()
+
+    val searchWidgetState by mainViewModel.searchWidgetState
+    val searchTextState by mainViewModel.searchTextState
+
+    val listadeConteoEstadoSolicitud: ConteoEstadoSolicitud by conteoEstadoSolicitudData.conteoEstadosolicitudResult.observeAsState(initial =
+    ConteoEstadoSolicitud())
+
+    Scaffold(
+        topBar = {
+            TrackingAppBar(
+                navigateUp = { navController.navigateUp() },
+                searchWidgetState = searchWidgetState,
+                searchTextState = searchTextState,
+                onTextChange = {
+                    mainViewModel.updateSearchTextState(newValue = it)
+                },
+                onCloseClicked = {
+                    mainViewModel.updateSearchWidgetState(newValue = SearchUiState.CLOSED)
+                },
+                onSearchClicked = {
+                    Log.d("Searched Text", it)
+                },
+                onSearchTriggered = {
+                    mainViewModel.updateSearchWidgetState(newValue = SearchUiState.OPENED)
+                }
+            )
+        }
+    ) { innerPadding ->
+        //val uiState by viewModel.uiState.collectAsState()
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .background(backgroundPrincipal)
+                .fillMaxSize()
+        ) {
+            ButtonSectionTracking(listOf("Distribución","Tendencia","Evolución"))
+
+            //val datos = estadoSolicitudData
+            val tracking = TrackingDataSource.itemCardTracking
+
+            TrackingCuadricula(
+                listaConteoEstadoSolicitud = listadeConteoEstadoSolicitud,
+                topicList = tracking,
+                navController = navController
+            )
+        }
+    }
 }
 
 @Composable
 fun TrackingAppBar(
     navigateUp: () -> Unit,
-    searchWidgetState: SearchState,
+    searchWidgetState: SearchUiState,
     searchTextState: String,
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
@@ -165,13 +244,13 @@ fun TrackingAppBar(
     onSearchTriggered: () -> Unit
 ) {
     when (searchWidgetState) {
-        SearchState.CLOSED -> {
+        SearchUiState.CLOSED -> {
             DefaultTrackingAppBar(
                 navigateUp,
                 onSearchClicked = onSearchTriggered
             )
         }
-        SearchState.OPENED -> {
+        SearchUiState.OPENED -> {
             SearchTrackingAppBar(
                 text = searchTextState,
                 onTextChange = onTextChange,
@@ -318,67 +397,6 @@ fun SearchTrackingAppBar(
 }
 
 @Composable
-<<<<<<< HEAD:Avance_Proyecto/app/src/main/java/com/example/avance_proyecto/screen/TrackingScreen.kt
-fun TrackingScreen(
-    navController: NavController,
-    viewModel: OrderViewModel = viewModel(),
-    mainViewModel: SearchViewModel = SearchViewModel(),
-    modifier: Modifier = Modifier
-) {
-    //val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
-    /*val currentScreen = CupcakeScreen.valueOf(
-        backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
-    )*/
-    Log.d("EstadoSolicitudViewModel", "TODO BIEN")
-    val estadoSolicitudData: EstadoSolicitudViewModel = viewModel()
-
-    val searchWidgetState by mainViewModel.searchWidgetState
-    val searchTextState by mainViewModel.searchTextState
-
-    Scaffold(
-        topBar = {
-            TrackingAppBar(
-                navigateUp = { navController.navigateUp() },
-                searchWidgetState = searchWidgetState,
-                searchTextState = searchTextState,
-                onTextChange = {
-                    mainViewModel.updateSearchTextState(newValue = it)
-                },
-                onCloseClicked = {
-                    mainViewModel.updateSearchWidgetState(newValue = SearchState.CLOSED)
-                },
-                onSearchClicked = {
-                    Log.d("Searched Text", it)
-                },
-                onSearchTriggered = {
-                    mainViewModel.updateSearchWidgetState(newValue = SearchState.OPENED)
-                }
-            )
-        }
-    ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .background(backgroundPrincipal)
-                .fillMaxSize()
-        ) {
-            ButtonSectionTracking(listOf("Distribución","Tendencia","Evolución"))
-
-            val datos = estadoSolicitudData
-            val tracking = TrackingDataSource.itemCardTracking
-            TopicCuadricula(
-                topicList = tracking,
-                navController = navController
-            )
-        }
-    }
-}
-
-@Composable
-=======
->>>>>>> 52079d383da661d2629166dea83e9f3668f7ce62:Avance_Proyecto/app/src/main/java/com/example/avance_proyecto/ui/view/TrackingScreen.kt
 fun ButtonSectionTracking(
     botones: List<String>
 ) {
@@ -426,20 +444,9 @@ fun ButtonSectionTracking(
     }
 }
 
-<<<<<<< HEAD:Avance_Proyecto/app/src/main/java/com/example/avance_proyecto/screen/TrackingScreen.kt
-@Preview
-@Composable
-fun TrackingScreenPreview() {
-    Avance_ProyectoTheme(darkTheme = false) {
-        val navController = rememberNavController()
-        TrackingScreen(navController = navController)
-    }
-}
 
-=======
->>>>>>> 52079d383da661d2629166dea83e9f3668f7ce62:Avance_Proyecto/app/src/main/java/com/example/avance_proyecto/ui/view/TrackingScreen.kt
 @Composable
-fun TopicCard(topic: TrackingCard, navController: NavController, modifier: Modifier = Modifier) {
+fun TrackingCard(topic: TrackingCard, navController: NavController, modifier: Modifier = Modifier) {
 
     BoxWithConstraints(
         modifier = Modifier
@@ -507,14 +514,16 @@ fun TopicCard(topic: TrackingCard, navController: NavController, modifier: Modif
                 .padding(15.dp)
         ) {
             Text(
-                text = stringResource(topic.name)+"\n"+ topic.cantidad.toString(),
+                //text = stringResource(topic.name)+"\n"+ topic.cantidad.toString(),
+                text = topic.conteoSolicitudItems.descripcion+"\n"+topic.conteoSolicitudItems.cantidad,
                 style = MaterialTheme.typography.bodyLarge,
                 lineHeight = 26.sp,
                 modifier = Modifier.align(Alignment.TopStart)
             )
             Image(
                 painter = painterResource(id = topic.imageRes),
-                contentDescription = stringResource(topic.name),
+                //contentDescription = stringResource(topic.name),
+                contentDescription = "Hola",
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .size(width = 40.dp, height = 40.dp),
@@ -541,7 +550,53 @@ fun TopicCard(topic: TrackingCard, navController: NavController, modifier: Modif
 }
 
 @Composable
-fun TopicCuadricula(topicList: List<TrackingCard>, navController: NavController, modifier: Modifier = Modifier){
+fun TrackingData(estadoSolicitudItems: ConteoEstadoSolicitudItem, topicList: List<TrackingCard>, navController: NavController){
+    val descripcion = estadoSolicitudItems.descripcion
+    var dataCard : TrackingCard
+    when(descripcion){
+        "Pendiente" -> {
+            TrackingCard(topic = TrackingCard(
+                R.drawable.pendiente_image,
+                BlueViolet1,
+                BlueViolet2,
+                BlueViolet3,
+                estadoSolicitudItems
+            ), navController = navController)
+
+        }
+        "Cotizado" -> {
+            TrackingCard(topic = TrackingCard(
+                R.drawable.cotizado_image,
+                LightGreen1,
+                LightGreen2,
+                LightGreen3,
+                estadoSolicitudItems
+            ), navController = navController)
+        }
+        "Anulado" -> {
+            TrackingCard(topic = TrackingCard(
+                R.drawable.anulado_image,
+                Beige1,
+                Beige2,
+                Beige3,
+                estadoSolicitudItems
+            ), navController = navController)
+        }
+        "Observado" -> {
+            TrackingCard(topic = TrackingCard(
+                R.drawable.observado_image,
+                OrangeYellow1,
+                OrangeYellow2,
+                OrangeYellow3,
+                estadoSolicitudItems
+            ), navController = navController)
+        }
+    }
+}
+
+@Composable
+fun TrackingCuadricula(listaConteoEstadoSolicitud: ConteoEstadoSolicitud, topicList: List<TrackingCard>, navController: NavController, modifier: Modifier = Modifier){
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -549,8 +604,9 @@ fun TopicCuadricula(topicList: List<TrackingCard>, navController: NavController,
         modifier = Modifier.padding(8.dp)
     ) {
 
-        items(topicList) { topic ->
-            TopicCard(topic, navController)
+        items(listaConteoEstadoSolicitud) {
+            println("Hola "+it.descripcion)
+            TrackingData(it, topicList, navController)
         }
     }
 }

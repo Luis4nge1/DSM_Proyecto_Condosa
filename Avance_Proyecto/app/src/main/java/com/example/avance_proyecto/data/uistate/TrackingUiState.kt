@@ -1,4 +1,4 @@
-package com.example.avance_proyecto.data
+package com.example.avance_proyecto.data.uistate
 
 data class TrackingUiState(
     /** nombre del usuario */

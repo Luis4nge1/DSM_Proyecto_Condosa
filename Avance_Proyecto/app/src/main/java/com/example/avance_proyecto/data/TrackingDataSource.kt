@@ -1,38 +1,42 @@
 package com.example.avance_proyecto.data
 
 import com.example.avance_proyecto.R
+import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
+import com.example.avance_proyecto.data.model.ConteoEstadoSolicitudItem
+import com.example.avance_proyecto.data.model.EstadoSolicitudItems
 import com.example.avance_proyecto.model.InformationCard
 import com.example.avance_proyecto.model.TrackingCard
 import com.example.avance_proyecto.ui.theme.*
 
 object TrackingDataSource {
 
-
-
     val itemCardTracking = listOf(
-        TrackingCard(
-            R.string.pendiente, 58, R.drawable.pendiente_image,
+        TrackingCard(R.drawable.pendiente_image,//Pendiente
             BlueViolet1,
             BlueViolet2,
-            BlueViolet3
+            BlueViolet3,
+            ConteoEstadoSolicitudItem(0,"")
         ),
-        TrackingCard
-            (R.string.cotizado, 68, R.drawable.cotizado_image,
+        TrackingCard(
+            R.drawable.cotizado_image,//Cotizado
             LightGreen1,
             LightGreen2,
-            LightGreen3
-                    ),
-        TrackingCard(
-            R.string.observado, 15, R.drawable.observado_image,
-            OrangeYellow1,
-            OrangeYellow2,
-            OrangeYellow3
+            LightGreen3,
+            ConteoEstadoSolicitudItem(0,"")
         ),
         TrackingCard(
-            R.string.anulado, 58, R.drawable.anulado_image,
+            R.drawable.observado_image,//Observado
+            OrangeYellow1,
+            OrangeYellow2,
+            OrangeYellow3,
+            ConteoEstadoSolicitudItem(0,"")
+        ),
+        TrackingCard(
+            R.drawable.anulado_image,//Anulado
             Beige1,
             Beige2,
-            Beige3
+            Beige3,
+            ConteoEstadoSolicitudItem(0,"")
         )
     )
 

@@ -4,17 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apiapp.domain.DataUseCase
-import com.example.avance_proyecto.data.DataEstadoSolicitud
+import com.example.avance_proyecto.data.model.EstadoSolicitud
+import com.example.avance_proyecto.domain.EstadoSolicitudUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DataViewModel () : ViewModel() {
 
-    val obtenerDatosUseCase = DataUseCase()
+    /*val obtenerDatosUseCase = EstadoSolicitudUseCase()
 
-    private val _DataEstadoSolicitud = MutableLiveData<DataEstadoSolicitud>()
-    val dataEstadoSolicitud: LiveData<DataEstadoSolicitud> = _DataEstadoSolicitud
+    private val _DataEstadoSolicitud = MutableLiveData<EstadoSolicitud>()
+    val dataEstadoSolicitud: LiveData<EstadoSolicitud> = _DataEstadoSolicitud
 
     init{
         startData()
@@ -29,13 +29,13 @@ class DataViewModel () : ViewModel() {
             }
         }*/
         viewModelScope.launch(Dispatchers.IO){
-            obtenerDatosUseCase.getEstadoSolicitud().onSuccess {
+            obtenerDatosUseCase.getEstadoSolicitudUC().onSuccess {
                 _DataEstadoSolicitud.postValue(it)
                 println(it)
             }.onFailure {
                 println("ALGO PASÓ")
             }
         }
-    }
+    }*/
 
 }

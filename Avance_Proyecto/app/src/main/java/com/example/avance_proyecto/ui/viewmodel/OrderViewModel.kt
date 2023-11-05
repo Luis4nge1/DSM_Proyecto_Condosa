@@ -1,7 +1,7 @@
 package com.example.avance_proyecto.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.avance_proyecto.data.TrackingUiState
+import com.example.avance_proyecto.data.uistate.TrackingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
