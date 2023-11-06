@@ -8,6 +8,8 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -33,17 +37,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -52,8 +64,11 @@ import com.example.avance_proyecto.data.UsuarioDataSource
 import com.example.avance_proyecto.data.uistate.UsuarioUiState
 import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
+import com.example.avance_proyecto.ui.theme.InformationCardContainer
+import com.example.avance_proyecto.ui.theme.backgroundPrincipal
+import kotlinx.coroutines.launch
 
-
+/*
 @Composable
 fun SolicitudScreen1(navController: NavController){
     Scaffold(topBar = {
@@ -91,28 +106,113 @@ fun BodyContentSolicitud(navController: NavController){
             Text(text = "Seguimiento")
         }
     }
-}
+}*/
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SolicitudScreen(navController: NavController) {
 
-    val options = listOf("Opcion 1", "Opcion 2", "Opcion 3") // Lista de opciones para el menú desplegable
-    var selectedOption by remember { mutableStateOf(options.first()) }
-    var isMenuExpanded by remember { mutableStateOf(false) }
+    val collectionTabs = listOf("Pendientes", "Cotizados", "Observados", "Anulados") // Lista de opciones para el menú desplegable
+    //var selectedOption by remember { mutableStateOf(options.first()) }
+    //var isMenuExpanded by remember { mutableStateOf(false) }
+
+    var tabState by remember { mutableStateOf(0) }
+    val pagerState = rememberPagerState()
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = pagerState.currentPage){
+        tabState = pagerState.currentPage
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(onBackClick = { navController.popBackStack() })
+            Column{
+                TopAppBar(onBackClick = { navController.popBackStack() })
+                TabRow(
+                    selectedTabIndex = minOf(collectionTabs.count(),tabState) ,
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
+                ) {
+                    collectionTabs.forEachIndexed { index, tabName ->
+                        Tab(
+                            modifier = Modifier.padding(4.dp),
+                            selected = index == pagerState.currentPage,
+                            onClick = {
+                                tabState = index
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            }
+                        ) {
+                            Text(text = tabName)
+                        }
+                    }
+                    /*Tab(
+                        modifier = Modifier.padding(4.dp),
+                        selected = tabState == 0,
+                        onClick = { tabState = 0 }
+                    ){
+                        Text("Pendientes")
+                    }
+                    Tab(
+                        modifier = Modifier.padding(4.dp),
+                        selected = tabState == 1,
+                        onClick = { tabState = 1 }
+                    ){
+                        Text("Cotizados")
+                    }
+                    Tab(
+                        modifier = Modifier.padding(4.dp),
+                        selected = tabState == 2,
+                        onClick = { tabState = 2 }
+                    ){
+                        Text("Observados")
+                    }
+                    Tab(
+                        modifier = Modifier.padding(4.dp),
+                        selected = tabState == 3,
+                        onClick = { tabState = 3 }
+                    ){
+                        Text("Anulados")
+                    }*/
+                }
+            }
+
         }
 
     ) {
+        println(it)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+        ){
+            HorizontalPager(
+                pageCount = collectionTabs.count(),
+                state = pagerState,
+                userScrollEnabled = true
+            ) {tabIndex ->
+                when(tabIndex){
+                    0 -> {
+                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                    }
+                    1 -> {
+                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                    }
+                    2 -> {
+                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                    }
+                    3 -> {
+                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                    }
+                }
+            }
+
+
+        /*Column(
+            modifier = Modifier
+                .fillMaxWidth()
                 .clickable { isMenuExpanded = true }
-                .padding(16.dp)
+                .padding(it)
         ) {
             Text("Selecciona una opción: $selectedOption")
             /*En trabajo, todavia no funciona, se superpone con la lista de usuarios*/
@@ -129,7 +229,9 @@ fun SolicitudScreen(navController: NavController) {
                         }
                     )
                 }
-            }
+            }*/
+            //val heroes = UsuarioDataSource.usuarios
+            //SolicitudList(navController = navController, heroes = heroes, contentPadding = it)
         }
 
         /*// Filtrar la lista de héroes según la opción seleccionada en el menú desplegable
@@ -140,35 +242,42 @@ fun SolicitudScreen(navController: NavController) {
             else -> emptyList() // Si ninguna opción coincide, mostrar una lista vacía
         }*/
 
-        val heroes = UsuarioDataSource.usuarios
-        HeroesList(navController = navController, heroes = heroes, contentPadding = it)
+
 
     }
 }
 
 @Composable
-fun TopAppBar(onBackClick: () -> Unit, modifier: Modifier = Modifier) {
-    CenterAlignedTopAppBar(
+fun TopAppBar(modifier: Modifier = Modifier, onBackClick: () -> Unit) {
+    TopAppBar(
         title = {
             Text(
-                text = stringResource(R.string.frame_name),
-                style = MaterialTheme.typography.displayLarge,
+                text = "Solicitudes",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
         },
         navigationIcon = {
             IconButton(
                 onClick = onBackClick
             ) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
             }
         },
-        modifier = modifier
+        modifier = Modifier.background(backgroundPrincipal),
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = backgroundPrincipal
+        )
     )
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun HeroesList(
+fun SolicitudList(
     navController: NavController,
     heroes: List<UsuarioUiState>,
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -192,7 +301,7 @@ fun HeroesList(
     ) {
         LazyColumn(contentPadding = contentPadding) {
             itemsIndexed(heroes) { index, hero ->
-                HeroListItem(
+                SolicitudListItem(
                     hero = hero,
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -214,13 +323,14 @@ fun HeroesList(
 }
 
 @Composable
-fun HeroListItem(
+fun SolicitudListItem(
     hero: UsuarioUiState,
     modifier: Modifier = Modifier
 ) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier,
+        colors = CardDefaults.cardColors(InformationCardContainer)
     ) {
         Row(
             modifier = Modifier
@@ -231,15 +341,18 @@ fun HeroListItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(hero.nombrecompleto),
-                    style = MaterialTheme.typography.displaySmall.copy(color = Color.Cyan),
+                    color = Color.Cyan,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = stringResource(hero.puesto),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
                 )
                 Text(
                     text = stringResource(hero.predio)+" - "+stringResource(hero.ubicacion),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
                 )
                 Text(
                     text = stringResource(hero.tiempo),
@@ -262,7 +375,7 @@ fun HeroPreview() {
         R.string.tiempo1
     )
     Avance_ProyectoTheme {
-        HeroListItem(hero = hero)
+        SolicitudListItem(hero = hero)
     }
 }
 

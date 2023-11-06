@@ -34,3 +34,5 @@ val BackgroundComunesCard = Color(0xFFC1C1C1)
 val ButtonColorDefault = Color(0xFF3861A7)
 val BackgroundRed = Color(0xFF280E14)
 val ButtonColorRed = Color(0xFF8A2F2F)
+
+val InformationCardContainer = Color(0xFF132B4A)

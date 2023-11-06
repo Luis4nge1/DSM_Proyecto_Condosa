@@ -1,10 +1,8 @@
 package com.example.avance_proyecto.data
 
 import com.example.avance_proyecto.R
-import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
 import com.example.avance_proyecto.data.model.ConteoEstadoSolicitudItem
-import com.example.avance_proyecto.data.model.EstadoSolicitudItems
-import com.example.avance_proyecto.model.InformationCard
+import com.example.avance_proyecto.data.uistate.InformationCardUiState
 import com.example.avance_proyecto.model.TrackingCard
 import com.example.avance_proyecto.ui.theme.*
 
@@ -41,28 +39,28 @@ object TrackingDataSource {
     )
 
     val itemCardInformation = listOf(
-        InformationCard(
+        InformationCardUiState(
             R.string.num_solicitado,"76"
         ),
-        InformationCard(
+        InformationCardUiState(
             R.string.nombre_solicitante,"Fabrizzio Quintana"
         ),
-        InformationCard(
+        InformationCardUiState(
             R.string.fecha_solicitud,"14/03/2023"
         ),
-        InformationCard(
+        InformationCardUiState(
             R.string.predio,"Valle las Esmeraldas"
         ),
-        InformationCard(
+        InformationCardUiState(
             R.string.area_predio,"1000 m2"
         ),
-        InformationCard(
+        InformationCardUiState(
             R.string.num_casa_habitacion,"4"
         ),
-        InformationCard(
+        InformationCardUiState(
             R.string.servicio_solicitado,"Administación: 4, Seguridad: 3, Limpieza:2, Jardineria: 1"
         ),
-        InformationCard(
+        InformationCardUiState(
             R.string.area_comun,"200 m2 total: 2"
         )
     )

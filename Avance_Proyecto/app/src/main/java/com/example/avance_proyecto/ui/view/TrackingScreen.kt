@@ -68,7 +68,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import co.yml.charts.axis.AxisData
+/*import co.yml.charts.axis.AxisData
 import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.common.model.Point
@@ -89,7 +89,7 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
-import co.yml.charts.ui.piechart.models.PieChartData
+import co.yml.charts.ui.piechart.models.PieChartData*/
 import com.example.avance_proyecto.R
 import com.example.avance_proyecto.data.TrackingDataSource
 import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
@@ -276,7 +276,11 @@ fun DefaultTrackingAppBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Hola, John Doe", color = Color.White)
+                Text(
+                    text = "Hola, John Doe",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -432,7 +436,7 @@ fun ButtonSectionTracking(
 
             }
         }
-        if(selectedChipIndex==0){
+        /*if(selectedChipIndex==0){
             PieChartScreen()
         }else{
             if(selectedChipIndex==1){
@@ -440,7 +444,7 @@ fun ButtonSectionTracking(
             }else{
                 LineChartScreen()
             }
-        }
+        }*/
     }
 }
 
@@ -610,7 +614,7 @@ fun TrackingCuadricula(listaConteoEstadoSolicitud: ConteoEstadoSolicitud, topicL
         }
     }
 }
-
+/*
 @Composable
 fun LineChartScreen(){
 
@@ -785,7 +789,7 @@ fun PieChartScreen(){
         )
     }
 
-}
+}*/
 
 fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
