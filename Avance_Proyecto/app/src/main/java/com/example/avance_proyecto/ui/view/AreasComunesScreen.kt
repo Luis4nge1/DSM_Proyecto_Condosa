@@ -5,9 +5,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -43,43 +45,53 @@ class InformacionAreasComunesActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InformacionAreasComunesScreen() {
-    val popupWidth = 300.dp
-    val popupHeight = 400.dp
+    val popupWidth = 320.dp
+    val popupHeight = 350.dp
 
-    Column(
+    Scaffold(
         modifier = Modifier
+            //.fillMaxSize()
+            .background(backgroundPrincipal)
             .width(popupWidth)
             .height(popupHeight)
-            .background(backgroundPrincipal) // Cambia el color de fondo de la pantalla
-            .padding(16.dp)
-    ) {
-        Row(
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp), // Altura del área del título y el botón
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(backgroundPrincipal)
         ) {
-            IconButton(
-                onClick = {
-                    // Acción al hacer clic en el botón de cerrar
+            // Usa TopAppBar en lugar de Row con IconButton y Text
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Información de áreas comunes",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
                 },
-                modifier = Modifier.size(48.dp)
-            ) {
-                Icon(imageVector = Icons.Default.Close, contentDescription = "Cerrar", tint = Color.White)
-            }
-            Text(
-                text = "Información de áreas comunes",
-                color = Color.White,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold
-                )
+                navigationIcon = {
+                    CircleCloseButton {
+                        // Acción al hacer clic en el botón de cerrar
+                    }
+                },
+                modifier = Modifier.background(backgroundPrincipal),
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = backgroundPrincipal
+                ),
+            )
+
+            InformacionAreasComunesContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
             )
         }
-
-        InformacionAreasComunesContent()
     }
 }
 
@@ -89,6 +101,7 @@ fun InformacionAreasComunesContent(modifier: Modifier = Modifier) {
     val areasComunes = listOf(
         AreaComun("Sala de estar", 50),
         AreaComun("Piscina", 200),
+        AreaComun("Terraza", 20),
         // Agrega más áreas comunes según sea necesario
     )
 
@@ -105,32 +118,86 @@ fun InformacionAreasComunesContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun CircleCloseButton(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .padding(8.dp) // Ajusta el padding según tus preferencias
+            .clickable { onClick() }
+            .background(Color.White, shape = CircleShape)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = "Cerrar",
+            tint = Color.Black,
+            modifier = Modifier
+                .padding(8.dp) // Ajusta el padding del icono según tus preferencias
+                .size(24.dp)
+        )
+    }
+}
+
+
+@Composable
 fun InformacionAreaComunCard(areaComun: AreaComun) {
+    val popupWidth = 250.dp
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp) // Ajusta el tamaño de las cards según sea necesario
-            .padding(8.dp)
-            .background(BackgroundComunesCard) // Cambia el color de fondo de la card
+            .width(popupWidth)
+            .padding(4.dp)
     ) {
-        Column(
+        // Card para el nombre del área
+        Card(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(8.dp)
         ) {
-            Text(
-                text = areaComun.nombre,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Nombre del área: ",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    )
                 )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Área en M2: ${areaComun.areaM2}",
-                style = MaterialTheme.typography.titleMedium
-            )
+                //Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = areaComun.nombre,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        }
+
+        // Card para el área en metros cuadrados
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Área en m2: ",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                //Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = areaComun.areaM2.toString(), // Convierte el área a String
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
 }
+
 
 data class AreaComun(val nombre: String, val areaM2: Int)
 

@@ -64,10 +64,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 /*import co.yml.charts.axis.AxisData
 import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.PlotType
@@ -102,6 +104,7 @@ import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.viewmodel.OrderViewModel
 import com.example.avance_proyecto.ui.viewmodel.SearchViewModel
 import com.example.avance_proyecto.ui.standardQuadFromTo
+import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
 import com.example.avance_proyecto.ui.theme.Beige1
 import com.example.avance_proyecto.ui.theme.Beige2
 import com.example.avance_proyecto.ui.theme.Beige3
@@ -793,4 +796,13 @@ fun PieChartScreen(){
 
 fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Preview
+@Composable
+fun TrackingScreenPreview() {
+    Avance_ProyectoTheme(darkTheme = false) {
+        val navController = rememberNavController()
+        TrackingScreen(navController = navController)
+    }
 }
