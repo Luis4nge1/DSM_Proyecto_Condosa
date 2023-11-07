@@ -158,15 +158,10 @@ fun InformacionAreaComunCard(areaComun: AreaComun) {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Nombre del área: ",
+                    text = "Nombre del área: ${areaComun.nombre}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
-                )
-                //Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = areaComun.nombre,
-                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }
@@ -183,15 +178,10 @@ fun InformacionAreaComunCard(areaComun: AreaComun) {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Área en m2: ",
+                    text = "Área en m2: ${areaComun.areaM2}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
-                )
-                //Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = areaComun.areaM2.toString(), // Convierte el área a String
-                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }
