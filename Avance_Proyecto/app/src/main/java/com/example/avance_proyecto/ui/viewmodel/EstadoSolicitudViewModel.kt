@@ -28,6 +28,9 @@ class EstadoSolicitudViewModel : ViewModel() {
     private val _isMessageError = mutableStateOf("Error: No se pudo cargar los datos")
     val isMessageError: State<String> = _isMessageError
 
+    private val _isLoading = mutableStateOf(true)
+    val isLoading: State<Boolean> = _isLoading
+
     init{
         getConteoEstadoSolicitud()
     }
@@ -41,6 +44,7 @@ class EstadoSolicitudViewModel : ViewModel() {
                 println("ALGO PASÓ")
                 _isError.value = true
             }
+            _isLoading.value = false
         }
     }
 

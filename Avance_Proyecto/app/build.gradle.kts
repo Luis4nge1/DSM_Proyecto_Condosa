@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.avance_proyecto"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -52,7 +52,7 @@ android {
 
 dependencies {
 
-    //implementation("co.yml:ycharts:2.1.0")
+    implementation("co.yml:ycharts:2.1.0")
 
     //viewmodel
     //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")

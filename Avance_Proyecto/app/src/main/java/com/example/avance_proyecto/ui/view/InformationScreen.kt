@@ -36,11 +36,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.avance_proyecto.data.TrackingDefaultDataSource
-import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.viewmodel.InformationViewModel
 import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
@@ -49,9 +49,7 @@ import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 
 @Composable
 fun InformationScreen(
-    navController: NavController,
-    viewModel: InformationViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    navController: NavController
 ){
     val tracking = TrackingDefaultDataSource.itemCardInformation
 
@@ -70,22 +68,10 @@ fun InformationScreen(
         ) {
             items(1) {
                 tracking.forEach { it->
-                    cardInformation(label = stringResource(it.labelData) , data = it.valueData.toString())
+                    CardInformation(label = stringResource(it.labelData) , data = it.valueData.toString())
                 }
-                /*cardInformation("Numero de solicitud:", "76")
-                cardInformation("Nombre del Solicitante:", "Fabrizzio Quintana")
-                cardInformation("Fecha de solicitud:", "14/03/2023")
-                cardInformation("Predio:", "Valle las Esmeraldas")
-                cardInformation("Area del predio:", "1000 m2")
-                cardInformation("N! de Casas-Habitación", "4")
-                cardInformation(
-                    "Servicio solicitado:",
-                    "Administación: 4, Seguridad: 3, Limpieza:2, Jardineria: 1"
-                )
-                cardInformation("Areas comunes:", "200 m2 total: 2")*/
-
-                ButtonSection(listOf("Áreas Comunes", "Solicitante", "Predio"), "Ver detalles en:")
-                ButtonSection(listOf("Cotizar", "Observar", "Anular"), "Seleccionar opción:")
+                ButtonSectionDetails(listOf("Áreas Comunes", "Solicitante", "Predio"), "Ver detalles en:")
+                ButtonSectionOption(listOf("Cotizar", "Observar", "Anular"), "Seleccionar opción:")
             }
         }
     }
@@ -94,8 +80,7 @@ fun InformationScreen(
 
 @Composable
 fun TrackingAppBarInformation(
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
+    navigateUp: () -> Unit
 ){
     TopAppBar(
         modifier = Modifier.background(backgroundPrincipal),
@@ -131,7 +116,7 @@ fun TrackingAppBarInformation(
 }
 
 @Composable
-fun cardInformation(label: String, data: String, modifier: Modifier = Modifier){
+fun CardInformation(label: String, data: String){
     Card(
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
     ){
@@ -157,15 +142,18 @@ fun cardInformation(label: String, data: String, modifier: Modifier = Modifier){
 }
 
 @Composable
-fun ButtonSection(
-    botones: List<String>, title: String/*,
-    popUpViewModel: PopUpViewModel= viewModel()*/
+fun ButtonSectionDetails(
+    botones: List<String>, title: String
 ) {
     val context = LocalContext.current
     //val gameUiState by popUpViewModel.uiState.collectAsState()
 
-    var selectedChipIndex by remember {
+    var selectedButtonIndex by remember {
         mutableStateOf(0)
+    }
+
+    var showDialog by remember {
+        mutableStateOf(false)
     }
 
     Column(
@@ -183,13 +171,71 @@ fun ButtonSection(
             items(botones.size) {
                 Button(
                     onClick = {
-                        showToastInformation(context, "Hola $it")
-                        selectedChipIndex = it
+                        showToastInformation(context, botones[it])
+                        selectedButtonIndex = it
+                        showDialog = true
                     },
-                    /*modifier = Modifier
-                        .padding(start = 15.dp, top = 15.dp, bottom = 15.dp),*/
                     colors = ButtonDefaults.buttonColors(
-                        if (botones[it].equals("Anular")) {
+                        ButtonColorDefault,
+                        Color.White
+                    ),
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text(text = botones[it], color = TextWhite)
+                }
+            }
+        }
+    }
+
+    if(showDialog && selectedButtonIndex == 0){
+        InformacionAreasComunesScreen(
+            onDimiss = { showDialog = false }
+        )
+    }
+    if(showDialog && selectedButtonIndex == 1){
+        SolicitanteContent(
+            onDimiss = { showDialog = false }
+        )
+    }
+
+}
+
+@Composable
+fun ButtonSectionOption(
+    botones: List<String>, title: String
+) {
+    val context = LocalContext.current
+    //val gameUiState by popUpViewModel.uiState.collectAsState()
+
+    var selectedButtonIndex by remember {
+        mutableStateOf(0)
+    }
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    Column(
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+    ){
+        Text(
+            text=title,
+            color= Color.White,
+            modifier = Modifier.padding(bottom=10.dp)
+        )
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            items(botones.size) {
+                Button(
+                    onClick = {
+                        showToastInformation(context, botones[it])
+                        selectedButtonIndex = it
+                        showDialog = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        if (botones[it] == "Anular") {
                             ButtonColorRed
                         } else {
                             ButtonColorDefault
@@ -202,6 +248,18 @@ fun ButtonSection(
                 }
             }
         }
+    }
+
+    if(showDialog && selectedButtonIndex == 2){
+        AnulacionScreen(
+            onDimiss = { showDialog = false },
+            onPositiveButtonClicked = { showDialog = false },
+            onNegativeButtonClicked = { showDialog = false },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        )
     }
 }
 

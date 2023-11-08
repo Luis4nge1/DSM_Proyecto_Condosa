@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -81,16 +83,19 @@ import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 import com.example.avance_proyecto.ui.viewmodel.SolicitudViewModel
 import com.example.avance_proyecto.ui.viewmodel.SolicitudesEstadoViewModel
 import kotlinx.coroutines.launch
+import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SolicitudScreen(navController: NavController) {
+fun SolicitudScreen(navController: NavController, body: String) {
 
     val solicitudViewModel: SolicitudViewModel = viewModel()
     val solicitudesEstadoViewModel: SolicitudesEstadoViewModel = viewModel()
+
+    val isLoading by solicitudesEstadoViewModel.isLoading.collectAsState()
 
     val listadoSolicitudesEstadoPendiente by solicitudesEstadoViewModel.solicitudesEstadoPendienteResult.collectAsState()
     val listadoSolicitudesEstadoCotizado by solicitudesEstadoViewModel.solicitudesEstadoCotizadoResult.collectAsState()
@@ -106,12 +111,17 @@ fun SolicitudScreen(navController: NavController) {
     val isSearching by solicitudViewModel.isSearching.collectAsState()
     val searchWidgetState by solicitudViewModel.searchWidgetState.collectAsState()
 
-    val collectionTabs = listOf("Pendientes", "Cotizados", "Observados", "Anulados") // Lista de opciones para el menú desplegable
+    val collectionTabs = listOf("Pendiente", "Cotizado", "Observado", "Anulado") // Lista de opciones para el menú desplegable
     //var selectedOption by remember { mutableStateOf(options.first()) }
     //var isMenuExpanded by remember { mutableStateOf(false) }
 
-    var tabState by remember { mutableStateOf(0) }
-    val pagerState = rememberPagerState()
+    val dataBody: Int = try {
+        body.toInt()
+    }catch (e: NumberFormatException){
+        0
+    }
+    var tabState by remember { mutableStateOf(dataBody) }
+    val pagerState = rememberPagerState(dataBody)
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = pagerState.currentPage){
         tabState = pagerState.currentPage
@@ -170,21 +180,6 @@ fun SolicitudScreen(navController: NavController) {
         var dataCotizado = emptyList<SolicitudesEstadoItem>()
         var dataAnulado = emptyList<SolicitudesEstadoItem>()
 
-        /*var dataUser = UsuarioDataSource.usuarios
-        var dataFiltrada = emptyList<UsuarioUiState>()
-        var dataUserFilter = dataUser.filter {userData ->
-            stringResource(userData.nombrecompleto).lowercase().contains(searchText.toString().lowercase()) ||
-                    stringResource(userData.predio).lowercase().contains(searchText.toString().lowercase())
-        }*/
-
-        /*println("BUSCANDO DATA: "+searchText)
-        dataFiltrada = dataUserFilter
-        println("BUSCANDO DATA: "+dataUser)*/
-
-        /*println("DEJANDO DATA: "+searchText)
-                dataFiltrada = dataUser
-                println("DEJANDO DATA: "+dataUser)*/
-
         when(searchWidgetState){
             SearchUiState.OPENED->{
                 solicitudesEstadoViewModel.getFiltradoPendiente(searchText)
@@ -204,46 +199,54 @@ fun SolicitudScreen(navController: NavController) {
             }
         }
         //println("FILTRANDO LOS DATOS: "+dataUserFilter)
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ){
-            HorizontalPager(
-                pageCount = collectionTabs.count(),
-                state = pagerState,
-                userScrollEnabled = true
-            ) {tabIndex ->
-                when(tabIndex){
-                    0 -> {
-                        SolicitudList(
-                            navController = navController,
-                            heroes = dataPendiente,
-                            contentPadding = it
-                        )
-                    }
-                    1 -> {
-                        SolicitudList(navController = navController,
-                            heroes = dataCotizado,
-                            contentPadding = it
-                        )
-                    }
-                    2 -> {
-                        SolicitudList(navController = navController,
-                            heroes = dataObservado,
-                            contentPadding = it
-                        )
-                    }
-                    3 -> {
-                        SolicitudList(navController = navController,
-                            heroes = dataAnulado,
-                            contentPadding = it
-                        )
+
+            if(isLoading){
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    CircularProgressIndicator(
+                        color = backgroundPrincipal,
+                        modifier = Modifier.size(50.dp).padding(it)
+                    )
+                }
+            }else{
+                HorizontalPager(
+                    pageCount = collectionTabs.count(),
+                    state = pagerState,
+                    userScrollEnabled = true
+                ) {tabIndex ->
+                    when(tabIndex){
+                        0 -> {
+                            SolicitudList(
+                                navController = navController,
+                                heroes = dataPendiente,
+                                contentPadding = it
+                            )
+                        }
+                        1 -> {
+                            SolicitudList(navController = navController,
+                                heroes = dataCotizado,
+                                contentPadding = it
+                            )
+                        }
+                        2 -> {
+                            SolicitudList(navController = navController,
+                                heroes = dataObservado,
+                                contentPadding = it
+                            )
+                        }
+                        3 -> {
+                            SolicitudList(navController = navController,
+                                heroes = dataAnulado,
+                                contentPadding = it
+                            )
+                        }
                     }
                 }
             }
-
-
-        }
     }
 }
 
@@ -347,7 +350,7 @@ fun SolicitudList(
         Text(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(1f),
-            text = "("+heroes.count()+") resultados",
+            text = "("+heroes.count()+") resultado${if(heroes.count()>1) "s" else "" }",
             color = backgroundCard,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center

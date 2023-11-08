@@ -49,8 +49,8 @@ class SolicitudesEstadoViewModel : ViewModel() {
     private val _isMessageError = mutableStateOf("Error: No se pudo cargar los datos")
     val isMessageError: State<String> = _isMessageError
 
-    private val _isLoadingState = MutableStateFlow(true)
-    val isLoadingState = _isLoadingState.asStateFlow()
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
 
     init{
         getSolicitudEstado()
@@ -60,7 +60,6 @@ class SolicitudesEstadoViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO){
             obtenerDatosUseCase.getSolicitudEstadoPendienteUC().onSuccess {
                 _solicitudesEstadoResult.value = it
-                _isLoadingState.value = false
                 println(it)
             }.onFailure {
                 _isError.value = true
@@ -69,6 +68,7 @@ class SolicitudesEstadoViewModel : ViewModel() {
             getSolicitudEstadoCotizado()
             getSolicitudEstadoObservado()
             getSolicitudEstadoAnulado()
+            _isLoading.value = false
         }
     }
 
@@ -138,7 +138,7 @@ class SolicitudesEstadoViewModel : ViewModel() {
     }
 
     fun updateIsLoadingState(value: Boolean) {
-        _isLoadingState.value = value
+        _isLoading.value = value
     }
 
 }

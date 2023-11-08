@@ -13,8 +13,8 @@ class SolicitudViewModel : ViewModel() {
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
 
-    private val _isLoadingSearch = MutableStateFlow(false)
-    val isLoadingSearch = _isLoadingSearch.asStateFlow()
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
     private val _searchWidgetState = MutableStateFlow(value = SearchUiState.CLOSED)
     val searchWidgetState = _searchWidgetState.asStateFlow()
@@ -28,7 +28,7 @@ class SolicitudViewModel : ViewModel() {
     }
 
     fun updateIsLoadingSearch(value: Boolean) {
-        _isLoadingSearch.value = value
+        _isLoading.value = value
     }
 
 }

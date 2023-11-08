@@ -19,8 +19,9 @@ fun AppNavigation(){
         composable(route = AppScreen.trackingScreen.route ){
             TrackingScreen(navController)
         }
-        composable(route = AppScreen.solicitudScreen.route ){
-            SolicitudScreen(navController)
+        composable(route = AppScreen.solicitudScreen.route+"/{body}" ){
+            val body = it.arguments?.getString("body") ?: "0"
+            SolicitudScreen(navController,body)
         }
         composable(route = AppScreen.informationScreen.route ){
             InformationScreen(navController)

@@ -1,98 +1,82 @@
-package com.example.avance_proyecto.screen
+package com.example.avance_proyecto.ui.view
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.LocalTextInputService
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.avance_proyecto.R
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
-import com.example.avance_proyecto.ui.theme.BackgroundComunesCard
-import com.example.avance_proyecto.ui.theme.ButtonColorDefault
-import com.example.avance_proyecto.ui.theme.DarkerButtonBlue
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
-
-class InformacionAreasComunesActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            Avance_ProyectoTheme {
-                InformacionAreasComunesScreen()
-            }
-        }
-    }
-}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun InformacionAreasComunesScreen() {
+fun InformacionAreasComunesScreen(
+    onDimiss: ()->Unit,
+    properties: DialogProperties = DialogProperties(),
+    modifier: Modifier = Modifier
+) {
     val popupWidth = 320.dp
     val popupHeight = 350.dp
 
-    Scaffold(
-        modifier = Modifier
-            //.fillMaxSize()
-            .background(backgroundPrincipal)
-            .width(popupWidth)
-            .height(popupHeight)
-    ) { innerPadding ->
-        Column(
+    Dialog(
+        onDismissRequest = { onDimiss() },
+        properties = properties
+    ){
+        Scaffold(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+                //.fillMaxSize()
                 .background(backgroundPrincipal)
-        ) {
-            // Usa TopAppBar en lugar de Row con IconButton y Text
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Información de áreas comunes",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                },
-                navigationIcon = {
-                    CircleCloseButton {
-                        // Acción al hacer clic en el botón de cerrar
-                    }
-                },
-                modifier = Modifier.background(backgroundPrincipal),
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = backgroundPrincipal
-                ),
-            )
-
-            InformacionAreasComunesContent(
+                .width(popupWidth)
+                .height(popupHeight)
+        ) { innerPadding ->
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
-            )
+                    .padding(innerPadding)
+                    .background(backgroundPrincipal)
+            ) {
+                // Usa TopAppBar en lugar de Row con IconButton y Text
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Información de áreas comunes",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    },
+                    navigationIcon = {
+                        CircleCloseButton(onDimiss)
+                    },
+                    modifier = Modifier.background(backgroundPrincipal),
+                    colors = TopAppBarDefaults.mediumTopAppBarColors(
+                        containerColor = backgroundPrincipal
+                    ),
+                )
+
+                InformacionAreasComunesContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                )
+            }
         }
     }
+
 }
 
 @Composable
@@ -195,6 +179,6 @@ data class AreaComun(val nombre: String, val areaM2: Int)
 @Composable
 fun InformacionAreasComunesPreview() {
     Avance_ProyectoTheme {
-        InformacionAreasComunesScreen()
+        //InformacionAreasComunesScreen()
     }
 }

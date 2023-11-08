@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -31,6 +32,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -53,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.ContentScale
@@ -64,7 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-/*import co.yml.charts.axis.AxisData
+import co.yml.charts.axis.AxisData
 import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.common.model.Point
@@ -85,7 +90,7 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
-import co.yml.charts.ui.piechart.models.PieChartData*/
+import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.avance_proyecto.R
 import com.example.avance_proyecto.data.TrackingDefaultDataSource
 import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
@@ -125,7 +130,7 @@ fun TrackingScreen(
     val conteoEstadoSolicitudData: EstadoSolicitudViewModel = viewModel()
 
     val isError: Boolean by conteoEstadoSolicitudData.isError
-    val isMessageError: String by conteoEstadoSolicitudData.isMessageError
+    val isLoading: Boolean by conteoEstadoSolicitudData.isLoading
 
     val searchWidgetState by mainViewModel.searchWidgetState
     val searchTextState by mainViewModel.searchTextState
@@ -166,12 +171,26 @@ fun TrackingScreen(
             //val datos = estadoSolicitudData
             val tracking = TrackingDefaultDataSource.itemCardTracking
 
-            TrackingCuadricula(
-                listaConteoEstadoSolicitud = listadeConteoEstadoSolicitud,
-                topicList = tracking,
-                navController = navController,
-                isError = isError
-            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if(isLoading){
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(50.dp)
+                    )
+                }else{
+                    TrackingCuadricula(
+                        listaConteoEstadoSolicitud = listadeConteoEstadoSolicitud,
+                        topicList = tracking,
+                        navController = navController,
+                        isError = isError
+                    )
+                }
+            }
+
+
         }
     }
 }
@@ -379,7 +398,7 @@ fun ButtonSectionTracking(
 
             }
         }
-        /*if(selectedChipIndex==0){
+        if(selectedChipIndex==0){
             PieChartScreen()
         }else{
             if(selectedChipIndex==1){
@@ -387,7 +406,7 @@ fun ButtonSectionTracking(
             }else{
                 LineChartScreen()
             }
-        }*/
+        }
     }
 }
 
@@ -483,7 +502,18 @@ fun TrackingCard(topic: TrackingCard, navController: NavController, modifier: Mo
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(route = AppScreen.solicitudScreen.route)
+                        navController.navigate(
+                            route = AppScreen.solicitudScreen.route + "/" +
+                                    when (topic.conteoSolicitudItems.descripcion) {
+                                        "Pendiente" -> "0"
+                                        "Cotizado" -> "1"
+                                        "Observado" -> "2"
+                                        "Anulado" -> "3"
+                                        else -> {
+                                            "0"
+                                        }
+                                    }
+                        )
                     }
                     .align(Alignment.BottomEnd)
                     .clip(RoundedCornerShape(10.dp))
@@ -569,7 +599,7 @@ fun TrackingCuadricula(
 
     }
 }
-/*
+
 @Composable
 fun LineChartScreen(){
 
@@ -744,7 +774,7 @@ fun PieChartScreen(){
         )
     }
 
-}*/
+}
 
 fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
