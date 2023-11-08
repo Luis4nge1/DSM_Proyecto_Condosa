@@ -14,6 +14,7 @@ data class UsuarioUiState (
     val ubicacion: Int,
     @StringRes
     val tiempo: Int,
+    val data: String
     /*,
     @DrawableRes val imageRes: Int*/
 

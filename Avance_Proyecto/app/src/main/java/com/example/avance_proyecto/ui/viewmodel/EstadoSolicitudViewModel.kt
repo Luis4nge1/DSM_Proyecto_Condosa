@@ -1,5 +1,7 @@
 package com.example.avance_proyecto.ui.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.State
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +22,12 @@ class EstadoSolicitudViewModel : ViewModel() {
     private val _conteoEstadosolicitudResult = MutableLiveData<ConteoEstadoSolicitud>()
     val conteoEstadosolicitudResult: LiveData<ConteoEstadoSolicitud> = _conteoEstadosolicitudResult
 
+    private val _isError = mutableStateOf(false)
+    val isError: State<Boolean> = _isError
+
+    private val _isMessageError = mutableStateOf("Error: No se pudo cargar los datos")
+    val isMessageError: State<String> = _isMessageError
+
     init{
         getConteoEstadoSolicitud()
     }
@@ -31,8 +39,14 @@ class EstadoSolicitudViewModel : ViewModel() {
                 println(it)
             }.onFailure {
                 println("ALGO PASÓ")
+                _isError.value = true
             }
         }
+    }
+
+
+    fun updateIsError(value: Boolean) {
+        _isError.value = value
     }
 
 }

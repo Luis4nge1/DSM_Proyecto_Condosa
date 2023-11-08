@@ -6,35 +6,42 @@ import com.example.avance_proyecto.data.uistate.InformationCardUiState
 import com.example.avance_proyecto.model.TrackingCard
 import com.example.avance_proyecto.ui.theme.*
 
-object TrackingDataSource {
+object TrackingDefaultDataSource {
 
     val itemCardTracking = listOf(
         TrackingCard(R.drawable.pendiente_image,//Pendiente
             BlueViolet1,
             BlueViolet2,
             BlueViolet3,
-            ConteoEstadoSolicitudItem(0,"")
+            ConteoEstadoSolicitudItem(0,"Pendiente")
         ),
         TrackingCard(
             R.drawable.cotizado_image,//Cotizado
             LightGreen1,
             LightGreen2,
             LightGreen3,
-            ConteoEstadoSolicitudItem(0,"")
+            ConteoEstadoSolicitudItem(0,"Cotizado")
         ),
         TrackingCard(
             R.drawable.observado_image,//Observado
             OrangeYellow1,
             OrangeYellow2,
             OrangeYellow3,
-            ConteoEstadoSolicitudItem(0,"")
+            ConteoEstadoSolicitudItem(0,"Observado")
         ),
         TrackingCard(
             R.drawable.anulado_image,//Anulado
             Beige1,
             Beige2,
             Beige3,
-            ConteoEstadoSolicitudItem(0,"")
+            ConteoEstadoSolicitudItem(0,"Anulado")
+        )
+    )
+
+    val itemCardDataStaticTracking = listOf(
+        ConteoEstadoSolicitudItem(
+            0,
+            "Pendientes"
         )
     )
 

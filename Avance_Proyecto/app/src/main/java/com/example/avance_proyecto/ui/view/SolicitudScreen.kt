@@ -1,5 +1,6 @@
 package com.example.avance_proyecto.ui.view
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
@@ -17,101 +18,90 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.avance_proyecto.R
-import com.example.avance_proyecto.data.UsuarioDataSource
+import com.example.avance_proyecto.data.model.SolicitudesEstadoItem
+import com.example.avance_proyecto.data.uistate.SearchUiState
 import com.example.avance_proyecto.data.uistate.UsuarioUiState
 import com.example.avance_proyecto.navigation.AppScreen
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
 import com.example.avance_proyecto.ui.theme.InformationCardContainer
+import com.example.avance_proyecto.ui.theme.backgroundCard
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
+import com.example.avance_proyecto.ui.viewmodel.SolicitudViewModel
+import com.example.avance_proyecto.ui.viewmodel.SolicitudesEstadoViewModel
 import kotlinx.coroutines.launch
-
-/*
-@Composable
-fun SolicitudScreen1(navController: NavController){
-    Scaffold(topBar = {
-        TopAppBar(title = {
-            Text(text = "Pantalla de solicitudes")
-        },
-            navigationIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.Black,
-                        modifier = Modifier.clickable{
-                            navController.popBackStack()
-                        }
-                    )
-            }
-        )
-    }) {it->
-        println(it)
-        BodyContentSolicitud(navController)
-    }
-}
-
-@Composable
-fun BodyContentSolicitud(navController: NavController){
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Text(text = "¡Bienvenido a la pantalla de solicitudes!")
-        Button(onClick = {
-            navController.navigate(route = AppScreen.informationScreen.route)
-        }) {
-            Text(text = "Seguimiento")
-        }
-    }
-}*/
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SolicitudScreen(navController: NavController) {
+
+    val solicitudViewModel: SolicitudViewModel = viewModel()
+    val solicitudesEstadoViewModel: SolicitudesEstadoViewModel = viewModel()
+
+    val listadoSolicitudesEstadoPendiente by solicitudesEstadoViewModel.solicitudesEstadoPendienteResult.collectAsState()
+    val listadoSolicitudesEstadoCotizado by solicitudesEstadoViewModel.solicitudesEstadoCotizadoResult.collectAsState()
+    val listadoSolicitudesEstadoObservado by solicitudesEstadoViewModel.solicitudesEstadoObservadoResult.collectAsState()
+    val listadoSolicitudesEstadoAnulado by solicitudesEstadoViewModel.solicitudesEstadoAnuladoResult.collectAsState()
+
+    val anulado by solicitudesEstadoViewModel.filtradoAnulado.collectAsState()
+    val pendiente by solicitudesEstadoViewModel.filtradoPendiente.collectAsState()
+    val cotizado by solicitudesEstadoViewModel.filtradoCotizado.collectAsState()
+    val observado by solicitudesEstadoViewModel.filtradoObservado.collectAsState()
+
+    val searchText by solicitudViewModel.searchText.collectAsState()
+    val isSearching by solicitudViewModel.isSearching.collectAsState()
+    val searchWidgetState by solicitudViewModel.searchWidgetState.collectAsState()
 
     val collectionTabs = listOf("Pendientes", "Cotizados", "Observados", "Anulados") // Lista de opciones para el menú desplegable
     //var selectedOption by remember { mutableStateOf(options.first()) }
@@ -128,7 +118,24 @@ fun SolicitudScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize(),
         topBar = {
             Column{
-                TopAppBar(onBackClick = { navController.popBackStack() })
+                SolcitudAppBar(
+                    navigateUp = {navController.navigateUp()},
+                    searchWidgetState = searchWidgetState,
+                    searchTextState = searchText,
+                    onTextChange = {
+                        solicitudViewModel.updateSearchTextState(newValue = it)
+                    },
+                    onCloseClicked = {
+                        solicitudViewModel.updateSearchWidgetState(newValue = SearchUiState.CLOSED)
+                    },
+                    onSearchClicked = {
+                        println("CLICKEADO")
+                    },
+                    onSearchTriggered = {
+                        solicitudViewModel.updateSearchWidgetState(newValue = SearchUiState.OPENED)
+                    },
+                    onBackClick = { navController.popBackStack() }
+                )
                 TabRow(
                     selectedTabIndex = minOf(collectionTabs.count(),tabState) ,
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
@@ -147,41 +154,53 @@ fun SolicitudScreen(navController: NavController) {
                             Text(text = tabName)
                         }
                     }
-                    /*Tab(
-                        modifier = Modifier.padding(4.dp),
-                        selected = tabState == 0,
-                        onClick = { tabState = 0 }
-                    ){
-                        Text("Pendientes")
-                    }
-                    Tab(
-                        modifier = Modifier.padding(4.dp),
-                        selected = tabState == 1,
-                        onClick = { tabState = 1 }
-                    ){
-                        Text("Cotizados")
-                    }
-                    Tab(
-                        modifier = Modifier.padding(4.dp),
-                        selected = tabState == 2,
-                        onClick = { tabState = 2 }
-                    ){
-                        Text("Observados")
-                    }
-                    Tab(
-                        modifier = Modifier.padding(4.dp),
-                        selected = tabState == 3,
-                        onClick = { tabState = 3 }
-                    ){
-                        Text("Anulados")
-                    }*/
                 }
             }
 
         }
 
-    ) {
+    ) { it ->
         println(it)
+        //var dataFiltradaGeneral = emptyList<SolicitudesEstadoItem>()
+        var dataPendiente = emptyList<SolicitudesEstadoItem>()
+        var dataObservado = emptyList<SolicitudesEstadoItem>()
+        var dataCotizado = emptyList<SolicitudesEstadoItem>()
+        var dataAnulado = emptyList<SolicitudesEstadoItem>()
+
+        /*var dataUser = UsuarioDataSource.usuarios
+        var dataFiltrada = emptyList<UsuarioUiState>()
+        var dataUserFilter = dataUser.filter {userData ->
+            stringResource(userData.nombrecompleto).lowercase().contains(searchText.toString().lowercase()) ||
+                    stringResource(userData.predio).lowercase().contains(searchText.toString().lowercase())
+        }*/
+
+        /*println("BUSCANDO DATA: "+searchText)
+        dataFiltrada = dataUserFilter
+        println("BUSCANDO DATA: "+dataUser)*/
+
+        /*println("DEJANDO DATA: "+searchText)
+                dataFiltrada = dataUser
+                println("DEJANDO DATA: "+dataUser)*/
+
+        when(searchWidgetState){
+            SearchUiState.OPENED->{
+                solicitudesEstadoViewModel.getFiltradoPendiente(searchText)
+                dataPendiente = pendiente
+                solicitudesEstadoViewModel.getFiltradoCotizado(searchText)
+                dataCotizado = cotizado
+                solicitudesEstadoViewModel.getFiltradoAnulado(searchText)
+                dataAnulado = anulado
+                solicitudesEstadoViewModel.getFiltradoObservado(searchText)
+                dataObservado = observado
+            }
+            SearchUiState.CLOSED->{
+                dataPendiente = listadoSolicitudesEstadoPendiente
+                dataCotizado = listadoSolicitudesEstadoCotizado
+                dataAnulado = listadoSolicitudesEstadoAnulado
+                dataObservado = listadoSolicitudesEstadoObservado
+            }
+        }
+        //println("FILTRANDO LOS DATOS: "+dataUserFilter)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -193,69 +212,97 @@ fun SolicitudScreen(navController: NavController) {
             ) {tabIndex ->
                 when(tabIndex){
                     0 -> {
-                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                        SolicitudList(
+                            navController = navController,
+                            heroes = dataPendiente,
+                            contentPadding = it
+                        )
                     }
                     1 -> {
-                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                        SolicitudList(navController = navController,
+                            heroes = dataCotizado,
+                            contentPadding = it
+                        )
                     }
                     2 -> {
-                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                        SolicitudList(navController = navController,
+                            heroes = dataObservado,
+                            contentPadding = it
+                        )
                     }
                     3 -> {
-                        SolicitudList(navController = navController, heroes = UsuarioDataSource.usuarios, contentPadding = it)
+                        SolicitudList(navController = navController,
+                            heroes = dataAnulado,
+                            contentPadding = it
+                        )
                     }
                 }
             }
 
 
-        /*Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { isMenuExpanded = true }
-                .padding(it)
-        ) {
-            Text("Selecciona una opción: $selectedOption")
-            /*En trabajo, todavia no funciona, se superpone con la lista de usuarios*/
-            DropdownMenu(
-                expanded = isMenuExpanded,
-                onDismissRequest = { isMenuExpanded = false }
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(text = option) },
-                        onClick = {
-                            selectedOption = option
-                            isMenuExpanded = false
-                        }
-                    )
-                }
-            }*/
-            //val heroes = UsuarioDataSource.usuarios
-            //SolicitudList(navController = navController, heroes = heroes, contentPadding = it)
         }
-
-        /*// Filtrar la lista de héroes según la opción seleccionada en el menú desplegable
-        val filteredHeroes = when (selectedOption) {
-            "Opción 1" -> UsuariosRepository.usuarios
-            /*"Opción 2" -> UsuariosRepository.usuarios.filter { /* Criterio de filtro para Opción 2 */ }
-            "Opción 3" -> UsuariosRepository.usuarios.filter { /* Criterio de filtro para Opción 3 */ }*/
-            else -> emptyList() // Si ninguna opción coincide, mostrar una lista vacía
-        }*/
-
-
-
     }
 }
 
 @Composable
-fun TopAppBar(modifier: Modifier = Modifier, onBackClick: () -> Unit) {
+fun SolcitudAppBar(
+    navigateUp: () -> Unit,
+    searchWidgetState: SearchUiState,
+    searchTextState: String,
+    onTextChange: (String) -> Unit,
+    onCloseClicked: () -> Unit,
+    onSearchClicked: (String) -> Unit,
+    onSearchTriggered: () -> Unit,
+    onBackClick: () -> Unit
+) {
+    when (searchWidgetState) {
+        SearchUiState.CLOSED -> {
+            DefaultSolicitudAppBar(
+                navigateUp,
+                onSearchClicked = onSearchTriggered,
+                onBackClick = onBackClick
+            )
+        }
+        SearchUiState.OPENED -> {
+            SearchSolcitudAppBar(
+                text = searchTextState,
+                onTextChange = onTextChange,
+                onCloseClicked = onCloseClicked,
+                onSearchClicked = onSearchClicked
+            )
+        }
+    }
+}
+
+@Composable
+fun DefaultSolicitudAppBar(
+    navigateUp: () -> Unit,
+    onBackClick: () -> Unit,
+    onSearchClicked: () -> Unit,
+) {
     TopAppBar(
         title = {
-            Text(
-                text = "Solicitudes",
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                Text(
+                    text = "Solicitudes",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                IconButton(
+                    onClick = { onSearchClicked() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search Icon",
+                        tint = Color.White
+                    )
+                }
+            }
+
         },
         navigationIcon = {
             IconButton(
@@ -279,7 +326,7 @@ fun TopAppBar(modifier: Modifier = Modifier, onBackClick: () -> Unit) {
 @Composable
 fun SolicitudList(
     navController: NavController,
-    heroes: List<UsuarioUiState>,
+    heroes: List<SolicitudesEstadoItem>,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     modifier: Modifier = Modifier
 ) {
@@ -289,42 +336,137 @@ fun SolicitudList(
             targetState = true
         }
     }
-
-    // Fade in entry animation for the entire list
-    AnimatedVisibility(
-        visibleState = visibleState,
-        enter = fadeIn(
-            animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
-        ),
-        exit = fadeOut(),
+    Column(
         modifier = modifier
-    ) {
-        LazyColumn(contentPadding = contentPadding) {
-            itemsIndexed(heroes) { index, hero ->
-                SolicitudListItem(
-                    hero = hero,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .clickable { navController.navigate(route = AppScreen.informationScreen.route) } // Llamar a la función que se necesite cuando se hace clic al elemento
-                        // Animate each list item to slide in vertically
-                        .animateEnterExit(
-                            enter = slideInVertically(
-                                animationSpec = spring(
-                                    stiffness = Spring.StiffnessVeryLow,
-                                    dampingRatio = Spring.DampingRatioLowBouncy
-                                ),
-                                initialOffsetY = { it * (index + 1) } // staggered entrance
+            .padding(contentPadding)
+            .fillMaxSize()
+    ){
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(1f),
+            text = "("+heroes.count()+") resultados",
+            color = backgroundCard,
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center
+        )
+        AnimatedVisibility(
+            visibleState = visibleState,
+            enter = fadeIn(
+                animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
+            ),
+            exit = fadeOut(),
+            modifier = modifier
+        ) {
+            LazyColumn {
+                itemsIndexed(heroes) { index, hero ->
+                    SolicitudListItem(
+                        hero = hero,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clickable { navController.navigate(route = AppScreen.informationScreen.route) } // Llamar a la función que se necesite cuando se hace clic al elemento
+                            // Animate each list item to slide in vertically
+                            .animateEnterExit(
+                                enter = slideInVertically(
+                                    animationSpec = spring(
+                                        stiffness = Spring.StiffnessVeryLow,
+                                        dampingRatio = Spring.DampingRatioLowBouncy
+                                    ),
+                                    initialOffsetY = { it * (index + 1) } // staggered entrance
+                                )
                             )
-                        )
-                )
+                    )
+                }
             }
         }
+    }
+
+    // Fade in entry animation for the entire list
+
+}
+
+@Composable
+fun SearchSolcitudAppBar(
+    text: String,
+    onTextChange: (String) -> Unit,
+    onCloseClicked: () -> Unit,
+    onSearchClicked: (String) -> Unit,
+){
+    val context = LocalContext.current
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        color = backgroundPrincipal
+    ){
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = text,
+            onValueChange = {
+                onTextChange(it)
+                println(it)
+            },
+            placeholder = {
+                Text(
+                    modifier = Modifier
+                        .alpha(0.5f),
+                    text = "Buscar...",
+                    color = Color.Black
+                )
+            },
+            textStyle = LocalTextStyle.current,
+            singleLine = true,
+            leadingIcon = {
+                IconButton(
+                    modifier = Modifier
+                        .alpha(0.5f),
+                    onClick = {}
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search Icon",
+                        tint = Color.Black
+                    )
+                } },
+
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        if (text.isNotEmpty()) {
+                            onTextChange("")
+                        } else {
+                            println("GAAA")
+                            onCloseClicked()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close Icon",
+                        tint = Color.Black.copy(alpha = 0.5f)
+                    )
+                } },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    showToastTracking(context, "Buscando la palabra: $text")
+                    onSearchClicked(text)
+                }
+            ),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.Black.copy(alpha = 0.5f),
+                cursorColor = Color.Black.copy(alpha = 0.5f)
+            )
+        )
     }
 }
 
 @Composable
 fun SolicitudListItem(
-    hero: UsuarioUiState,
+    hero: SolicitudesEstadoItem,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -340,22 +482,22 @@ fun SolicitudListItem(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(hero.nombrecompleto),
+                    text = hero.nombre_solicitante,
                     color = Color.Cyan,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = stringResource(hero.puesto),
+                    text = hero.departamento,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.White
                 )
                 Text(
-                    text = stringResource(hero.predio)+" - "+stringResource(hero.ubicacion),
+                    text = hero.descripcion_predio+" - "+hero.provincia+" ("+hero.distrito+")",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.White
                 )
                 Text(
-                    text = stringResource(hero.tiempo),
+                    text = hero.fecha,
                     style = MaterialTheme.typography.bodyLarge.copy(color = Color.Red),
                 )
             }
@@ -364,7 +506,7 @@ fun SolicitudListItem(
 }
 
 @Preview("Light Theme")
-/*@Preview("Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)*/
+@Preview("Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun HeroPreview() {
     val hero = UsuarioUiState(
@@ -372,10 +514,11 @@ fun HeroPreview() {
         R.string.puesto1,
         R.string.predio1,
         R.string.ubicacion1,
-        R.string.tiempo1
+        R.string.tiempo1,
+        "Datos"
     )
     Avance_ProyectoTheme {
-        SolicitudListItem(hero = hero)
+        //SolicitudListItem(hero = hero)
     }
 }
 
