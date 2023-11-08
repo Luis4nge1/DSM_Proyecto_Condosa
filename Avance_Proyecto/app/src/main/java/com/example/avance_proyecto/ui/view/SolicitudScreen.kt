@@ -81,6 +81,9 @@ import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 import com.example.avance_proyecto.ui.viewmodel.SolicitudViewModel
 import com.example.avance_proyecto.ui.viewmodel.SolicitudesEstadoViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -469,6 +472,9 @@ fun SolicitudListItem(
     hero: SolicitudesEstadoItem,
     modifier: Modifier = Modifier
 ) {
+
+    val tiempo = obtenerTiempoTranscurrido(hero.fecha)
+
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier,
@@ -497,11 +503,35 @@ fun SolicitudListItem(
                     color = Color.White
                 )
                 Text(
-                    text = hero.fecha,
+                    text = tiempo,
                     style = MaterialTheme.typography.bodyLarge.copy(color = Color.Red),
                 )
             }
         }
+    }
+}
+
+fun obtenerTiempoTranscurrido(fecha: String): String {
+    val formato = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+    val fechaObjeto = formato.parse(fecha)
+    val diferencia = Date().time-fechaObjeto.time
+
+    val segundos = diferencia/1000
+    val minutos = segundos/60
+    val horas = minutos/60
+    val dias = horas/24
+    val semanas = dias/7
+    val meses = dias/30
+    val anios = meses/12
+
+    return when{
+        anios > 0 -> "Hace $anios año${if(anios>1) "s" else ""}"
+        meses > 0 -> "Hace $meses mes${if(meses>1) "es" else ""}"
+        semanas > 0 -> "Hace $semanas semana${if(semanas>1) "s" else ""}"
+        dias > 0 -> "Hace $dias dia${if(dias>1) "s" else ""}"
+        horas > 0 -> "Hace $horas hora${if(horas>1) "s" else ""}"
+        minutos > 0 -> "Hace $minutos minuto${if(minutos>1) "s" else ""}"
+        else -> "Hace $segundos segundo${if(segundos>1) "s" else ""}"
     }
 }
 
