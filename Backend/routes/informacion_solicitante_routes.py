@@ -14,11 +14,13 @@ informacion_solicitante_schemas = InformacionSolicitanteSchema(many=True)
 # informacion_solicitante_routes.py
 from flask import Blueprint, request, jsonify, make_response
 from utils.db import db
-from models.informacion_solicitante import InformacionSolicitante
+from sqlalchemy import text, func
+import traceback
 from schemas.informacion_solicitante_schema import InformacionSolicitanteSchema
 
 informacion_solicitante_routes = Blueprint("informacion_solicitante_routes", __name__)
 informacion_solicitante_schema = InformacionSolicitanteSchema()
+
 
 @informacion_solicitante_routes.route("/informacion_solicitante", methods=["POST"])
 def create_InformacionSolicitante():
@@ -49,19 +51,19 @@ def create_InformacionSolicitante():
 
 @informacion_solicitante_routes.route("/informacion_solicitante", methods=["GET"])
 def get_InformacionSolicitantes():
-    try:
+    if request.method == "GET":
         response = []
         data = (
             db.session.query(
                 Persona.nombres.label("Nombre"),
-                Persona.apellido_paterno.label("Apellido Paterno"),
-                Persona.apellido_materno.label("Apellido Materno"),
-                Persona.id_tipo_documento.label("Tipo de Documento"),
-                Persona.ndocumento.label("N° de Documento"),
-                func.concat(Ubigeo.distrito, ', ', Ubigeo.departamento).label("Ubicacion"),
-                Solicitante.telefono.label("N° de Contacto"),
-                Persona.direccion.label("Direccion"),
-                Solicitante.correo.label("Correo"),
+                Persona.apellido_paterno.label("apellido_paterno"),
+                Persona.apellido_materno.label("apellido_materno"),
+                Persona.id_tipo_documento.label("tipo_documento"),
+                Persona.ndocumento.label("numero_documento"),
+                func.concat(Ubigeo.distrito, ' - ', Ubigeo.departamento).label("ubicacion"),
+                Solicitante.telefono.label("numero_contacto"),
+                Persona.direccion.label("direccion"),
+                Solicitante.correo.label("correo"),
             )
             .join(Ubigeo, Persona.idubigeo == Ubigeo.idubigeo)
             .join(Solicitante, Persona.id_persona == Solicitante.id_persona)
@@ -70,22 +72,19 @@ def get_InformacionSolicitantes():
         for row in data:
             response.append({
                 "Nombre": row.Nombre,
-                "Apellido Paterno": row["Apellido Paterno"],
-                "Apellido Materno": row["Apellido Materno"],
-                "Tipo de Documento": row["Tipo de Documento"],
-                "N° de Documento": row["N° de Documento"],
-                "Ubicacion": row.Ubicacion,
-                "N° de Contacto": row["N° de Contacto"],
-                "Direccion": row.Direccion,
-                "Correo": row.Correo,
+                "apellido_paterno": row.apellido_paterno,
+                "apellido_materno": row.apellido_materno,
+                "tipo_documento": row.tipo_documento,
+                "numero_documento": row.numero_documento,  # También cambie aquí
+                "ubicacion": row.ubicacion,
+                "numero_contacto": row.numero_contacto,  # Y aquí
+                "direccion": row.direccion,
+                "correo": row.correo,
             })
         return jsonify(response)
+    else:
+        return jsonify({"message": "No se encontraron datos"})
 
-    except Exception as e:
-        traceback.print_exc()
-        data = {"message": "Error al obtener la Informacion de Solicitante", "status": 500}
-        return make_response(jsonify(data), 500)
-    
 @informacion_solicitante_routes.route("/informacion_solicitante/<int:id>", methods=["PUT"])
 def update_InformacionSolicitante(id):
     try:
