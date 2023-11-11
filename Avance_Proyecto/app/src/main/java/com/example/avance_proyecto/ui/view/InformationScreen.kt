@@ -49,8 +49,11 @@ import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 
 @Composable
 fun InformationScreen(
-    navController: NavController
+    navController: NavController,
+    body: String
 ){
+    //Con el body, tienes la id de la solicitud
+    println("information_screen: "+body)
     val tracking = TrackingDefaultDataSource.itemCardInformation
 
     Scaffold(
@@ -266,9 +269,12 @@ fun ButtonSectionOption(
 fun showToastInformation(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
+
+/*
 @Preview
 @Composable
 fun InformationScreenPreview() {
     val navController = rememberNavController() // Importa rememberNavController
     InformationScreen(navController = navController)
 }
+ */

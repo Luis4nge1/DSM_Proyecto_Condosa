@@ -6,6 +6,7 @@ class SolicitudesEstadoItem (
     val descripcion_predio: String = "",
     val distrito: String = "",
     val fecha: String = "",
+    val id_solicitud: String = "",
     val nombre_solicitante: String = "",
     val provincia: String = ""
 )

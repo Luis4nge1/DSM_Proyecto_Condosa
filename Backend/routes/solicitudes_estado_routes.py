@@ -15,7 +15,8 @@ def obtener_informacion_predio():
     if request.method == "GET":
         try:
             response = []
-            
+                
+                           
             # Ejecutar la consulta utilizando SQLAlchemy
             data = (db.session.query(
                 Solicitud.nombre_solicitante,
@@ -24,7 +25,8 @@ def obtener_informacion_predio():
                 Ubigeo.provincia,
                 Ubigeo.distrito,
                 EstadoSolicitud.descripcion.label("descripcion_estado"),
-                SolicitudEstadoSolicitud.fecha
+                SolicitudEstadoSolicitud.fecha,
+                Solicitud.id_solicitud
             ).join(
                 Predio,
                 Solicitud.id_predio == Predio.id_predio
@@ -48,7 +50,8 @@ def obtener_informacion_predio():
                     "provincia": row[3],
                     "distrito": row[4],
                     "descripcion_estado": row[5],
-                    "fecha": row[6]
+                    "fecha": row[6],
+                    "id_solicitud": row[7]
                 })
             
             # Devolver los resultados en formato JSON
