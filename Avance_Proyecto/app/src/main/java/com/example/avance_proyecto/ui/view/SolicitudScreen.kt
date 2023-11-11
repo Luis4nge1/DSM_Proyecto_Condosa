@@ -371,7 +371,7 @@ fun SolicitudList(
                         hero = hero,
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clickable { navController.navigate(route = AppScreen.informationScreen.route) } // Llamar a la función que se necesite cuando se hace clic al elemento
+                            .clickable { navController.navigate(route = AppScreen.informationScreen.route+"/"+hero.id_solicitud) } // Llamar a la función que se necesite cuando se hace clic al elemento
                             // Animate each list item to slide in vertically
                             .animateEnterExit(
                                 enter = slideInVertically(
@@ -383,6 +383,8 @@ fun SolicitudList(
                                 )
                             )
                     )
+                    println("${AppScreen.solicitudScreen.route}/${hero.id_solicitud}")
+
                 }
             }
         }
@@ -490,6 +492,7 @@ fun SolicitudListItem(
                 .fillMaxWidth()
                 .padding(16.dp)
                 .sizeIn(minHeight = 72.dp)
+
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
