@@ -13,10 +13,10 @@ from routes.area_comun_routes import area_comun_routes
 from routes.predio_area_comun_routes import predio_area_comun_routes
 from routes.estado_solicitud_routes import estado_solicitud_routes
 from routes.conteo_estado_solicitud_routes import conteo_estado_solicitud_routes
-<<<<<<< HEAD
+#<<<<<<< HEAD
 from routes.solicitudes_estado_routes import solicitudes_estado_routes
-=======
->>>>>>> 4af7a279a1f84184b0f7497b2bd677cab8a5ff86
+#=======
+#>>>>>>> 4af7a279a1f84184b0f7497b2bd677cab8a5ff86
 from routes.informacion_solicitante_routes import informacion_solicitante_routes
 from flask_sqlalchemy import SQLAlchemy
 from config import DATABASE_CONNECTION_URI
@@ -53,10 +53,10 @@ app.register_blueprint(area_comun_routes)
 app.register_blueprint(predio_area_comun_routes)
 app.register_blueprint(estado_solicitud_routes)
 app.register_blueprint(conteo_estado_solicitud_routes)
-<<<<<<< HEAD
+#<<<<<<< HEAD
 app.register_blueprint(solicitudes_estado_routes)
-=======
->>>>>>> 4af7a279a1f84184b0f7497b2bd677cab8a5ff86
+#=======
+#>>>>>>> 4af7a279a1f84184b0f7497b2bd677cab8a5ff86
 app.register_blueprint(informacion_solicitante_routes)
 
 if __name__ == '__main__':

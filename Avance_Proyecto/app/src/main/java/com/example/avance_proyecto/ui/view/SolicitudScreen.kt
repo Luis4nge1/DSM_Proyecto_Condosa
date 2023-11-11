@@ -71,7 +71,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.avance_proyecto.R
+import com.example.avance_proyecto.data.UsuarioDataSource
 import com.example.avance_proyecto.data.model.SolicitudesEstadoItem
 import com.example.avance_proyecto.data.uistate.SearchUiState
 import com.example.avance_proyecto.data.uistate.UsuarioUiState
@@ -537,7 +539,7 @@ fun obtenerTiempoTranscurrido(fecha: String): String {
         else -> "Hace $segundos segundo${if(segundos>1) "s" else ""}"
     }
 }
-
+/*
 @Preview("Light Theme")
 @Preview("Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -564,5 +566,18 @@ fun HeroesPreview() {
         ) {
             //HeroesList(heroes = UsuarioDataSource.usuarios)
         }
+    }
+}
+*/
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+@Preview(showBackground = true)
+fun SolicitudScreenPreview() {
+    val navController = rememberNavController()
+    val body = "3" // Puedes ajustar esto según tus necesidades
+
+    Avance_ProyectoTheme {
+        // Asegúrate de proporcionar instancias reales de tus ViewModels
+        SolicitudScreen(navController = navController, body = body)
     }
 }

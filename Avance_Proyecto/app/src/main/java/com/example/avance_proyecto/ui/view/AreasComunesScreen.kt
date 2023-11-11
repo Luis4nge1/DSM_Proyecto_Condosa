@@ -179,6 +179,6 @@ data class AreaComun(val nombre: String, val areaM2: Int)
 @Composable
 fun InformacionAreasComunesPreview() {
     Avance_ProyectoTheme {
-        //InformacionAreasComunesScreen()
+        InformacionAreasComunesScreen(onDimiss = {}) // Provide any required parameters here
     }
 }

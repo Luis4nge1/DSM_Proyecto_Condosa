@@ -65,10 +65,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import co.yml.charts.axis.AxisData
 import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.PlotType
@@ -778,4 +780,21 @@ fun PieChartScreen(){
 
 fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TrackingScreenPreviewContent() {
+    val navController = rememberNavController()
+
+    // Inicializar los ViewModels según sea necesario
+    val orderViewModel = OrderViewModel()
+    val searchViewModel = SearchViewModel()
+
+    TrackingScreen(
+        navController = navController,
+        viewModel = orderViewModel,
+        mainViewModel = searchViewModel,
+        modifier = Modifier.fillMaxSize()
+    )
 }

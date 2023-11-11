@@ -118,6 +118,10 @@ fun buildAnulacionText(): AnnotatedString {
 @Composable
 fun AnulacionScreenPreview() {
     Avance_ProyectoTheme {
-        //AnulacionScreen()
+        AnulacionScreen(
+            onDimiss = {},
+            onPositiveButtonClicked = {},
+            onNegativeButtonClicked = {}
+        )
     }
 }

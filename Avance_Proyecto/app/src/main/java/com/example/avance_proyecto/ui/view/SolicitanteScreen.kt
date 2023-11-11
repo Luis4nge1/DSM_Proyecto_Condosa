@@ -327,6 +327,6 @@ fun CircleCButton(onClick: () -> Unit) {
 @Composable
 fun SolicitantePreview() {
     Avance_ProyectoTheme {
-        //SolicitanteContent()
+        SolicitanteContent(onDimiss = {})
     }
 }
