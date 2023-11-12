@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,8 @@ import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
 import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
+import com.example.avance_proyecto.ui.viewmodel.InformacionSolicitudViewModel
+
 
 @Composable
 fun InformationScreen(
@@ -54,7 +57,30 @@ fun InformationScreen(
 ){
     //Con el body, tienes la id de la solicitud
     println("information_screen: "+body)
-    val tracking = TrackingDefaultDataSource.itemCardInformation
+
+    /*
+    val id: Int = try {
+        body.toInt()
+    } catch (e: NumberFormatException) {
+        println("Error al convertir la cadena a entero: $e")
+        -1 // Valor predeterminado, pero podría ser cualquier cosa que tenga sentido en tu caso.
+    }
+    */
+    //println("information_screen: "+id)
+
+    val informacionSolicitudViewModel: InformacionSolicitudViewModel = viewModel()
+
+    val isLoading by informacionSolicitudViewModel.isLoading.collectAsState()
+
+    informacionSolicitudViewModel.FilterIdSolicitud(body) // Filtrar los datos según la id
+
+    val listInformacionSolicitante by informacionSolicitudViewModel.idSolcitudResult.collectAsState()
+
+    TrackingDefaultDataSource.setListInformacionSolicitante(listInformacionSolicitante)
+
+    val tracking = TrackingDefaultDataSource.mostrarInformacionSolicitud()
+
+    println("Lista: $listInformacionSolicitante")
 
     Scaffold(
         topBar = {
@@ -71,7 +97,7 @@ fun InformationScreen(
         ) {
             items(1) {
                 tracking.forEach { it->
-                    CardInformation(label = stringResource(it.labelData) , data = it.valueData.toString())
+                    CardInformation(label = stringResource(it.labelData) , data = it.valueData)
                 }
                 ButtonSectionDetails(listOf("Áreas Comunes", "Solicitante", "Predio"), "Ver detalles en:")
                 ButtonSectionOption(listOf("Cotizar", "Observar", "Anular"), "Seleccionar opción:")

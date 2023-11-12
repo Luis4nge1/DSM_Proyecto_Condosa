@@ -11,5 +11,4 @@ class SolicitudesEstadoUseCase {
         return repository.getSolicitudesEstadoRepository()
     }
 
-
 }

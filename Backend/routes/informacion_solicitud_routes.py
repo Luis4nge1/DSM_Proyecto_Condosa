@@ -51,9 +51,11 @@ def get_InformacionSolicitud():
         response = []
         data = (
             db.session.query(
+                Solicitud.id_solicitud.label("id_solicitud"), 
                 Solicitud.num_casas.label("numero_solicitud"),
                 Solicitante.id_solicitante,
                 Persona.id_persona,
+                func.concat(Persona.apellido_paterno, ' ', Persona.apellido_materno, ' ', Persona.nombres).label("nombre_solicitante"),
                 Solicitud.id_predio,
                 Solicitud.fecha_solicitud,
                 Predio.descripcion.label("predio"),
@@ -71,9 +73,11 @@ def get_InformacionSolicitud():
             .join(AreaComun, PredioAreaComun.id_area_comun == AreaComun.id_area_comun)
             .join(Servicio, Solicitud.id_servicio == Servicio.id_servicio)
             .group_by(
+                Solicitud.id_solicitud,
                 Solicitud.num_casas,
                 Solicitante.id_solicitante,
                 Persona.id_persona,
+                func.concat(Persona.apellido_paterno, ' ', Persona.apellido_materno, ' ', Persona.nombres),
                 Solicitud.id_predio,
                 Solicitud.fecha_solicitud,
                 Predio.descripcion,
@@ -92,10 +96,12 @@ def get_InformacionSolicitud():
                 "id_solicitante": row.id_solicitante,
                 "id_persona": row.id_persona,
                 "id_predio": row.id_predio,
+                "id_solicitud": row.id_solicitud,
                 "fecha_solicitud": row.fecha_solicitud,
                 "predio": row.predio,
                 "area_predio": row.area_predio,
                 "numero_casas": row.numero_casas,
+                "Nombre": row.nombre_solicitante,
                 "servicio_solicitado": row.servicio_solicitado,
                 "cantidad_areas_comunes": row.cantidad_areas_comunes,
                 "id_area_comun": row.id_area_comun,
