@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -72,15 +74,9 @@ fun InformationScreen(
 
     val isLoading by informacionSolicitudViewModel.isLoading.collectAsState()
 
-    informacionSolicitudViewModel.FilterIdSolicitud(body) // Filtrar los datos según la id
+    informacionSolicitudViewModel.getInformacionSolicitud(body) // Filtrar los datos según la id
 
-    val listInformacionSolicitante by informacionSolicitudViewModel.idSolcitudResult.collectAsState()
-
-    TrackingDefaultDataSource.setListInformacionSolicitante(listInformacionSolicitante)
-
-    val tracking = TrackingDefaultDataSource.mostrarInformacionSolicitud()
-
-    println("Lista: $listInformacionSolicitante")
+    //println("Lista: $listInformacionSolicitante")
 
     Scaffold(
         topBar = {
@@ -93,14 +89,36 @@ fun InformationScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .background(backgroundPrincipal)
-                .fillMaxSize()
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             items(1) {
-                tracking.forEach { it->
-                    CardInformation(label = stringResource(it.labelData) , data = it.valueData)
+                if(isLoading){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ){
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(50.dp)
+                        )
+                    }
+                }else{
+                    val listInformacionSolicitante by informacionSolicitudViewModel.idSolcitudResult.collectAsState()
+
+                    TrackingDefaultDataSource.setListInformacionSolicitante(listInformacionSolicitante)
+
+                    val tracking = TrackingDefaultDataSource.mostrarInformacionSolicitud()
+                    tracking.forEach { it->
+                        CardInformation(label = stringResource(it.labelData) , data = it.valueData)
+                    }
+                    ButtonSectionDetails(listOf("Áreas Comunes", "Solicitante", "Predio"), "Ver detalles en:")
+                    ButtonSectionOption(listOf("Cotizar", "Observar", "Anular"), "Seleccionar opción:")
                 }
-                ButtonSectionDetails(listOf("Áreas Comunes", "Solicitante", "Predio"), "Ver detalles en:")
-                ButtonSectionOption(listOf("Cotizar", "Observar", "Anular"), "Seleccionar opción:")
+
             }
         }
     }

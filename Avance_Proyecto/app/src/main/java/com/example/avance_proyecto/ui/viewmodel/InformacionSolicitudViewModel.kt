@@ -30,14 +30,15 @@ class InformacionSolicitudViewModel: ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
-    init{
+    /*init{
         getInformacionSolicitud()
-    }
+    }*/
 
-    private fun getInformacionSolicitud(){
+    fun getInformacionSolicitud(nuevoId: String){
         viewModelScope.launch(Dispatchers.IO){
             obtenerDatosUseCase.getInformacionSolicitudUC().onSuccess {
                 _informacionSolicitudResult.value = it
+                FilterIdSolicitud(nuevoId)
                 //println("FUNCION DENTRO DE VIEW MODEL:$it")
             }.onFailure {
                 _isError.value = true
@@ -47,11 +48,10 @@ class InformacionSolicitudViewModel: ViewModel() {
     }
 
     fun FilterIdSolicitud(nuevoId: String) {
-        println("Id: "+nuevoId)
-        _idSolcitudResult.value = _informacionSolicitudResult.value.filter { userData ->
-            userData.id_solicitud.lowercase().equals(nuevoId)
-        }
-        println("Filtrado:"+_idSolcitudResult.value)
+            _idSolcitudResult.value = _informacionSolicitudResult.value.filter { userData ->
+                userData.id_solicitud.lowercase().equals(nuevoId)
+            }
+
     }
 
 }
