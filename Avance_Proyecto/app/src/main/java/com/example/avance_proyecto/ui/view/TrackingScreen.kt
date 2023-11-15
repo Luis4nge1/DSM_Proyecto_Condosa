@@ -168,7 +168,7 @@ fun TrackingScreen(
                 .background(backgroundPrincipal)
                 .fillMaxSize()
         ) {
-            ButtonSectionTracking(listOf("Distribución","Tendencia","Evolución"))
+            ButtonSectionTracking(listOf("Estados","Secciones","Evolución"), conteoEstadoSolicitudData)
 
             //val datos = estadoSolicitudData
             val tracking = TrackingDefaultDataSource.itemCardTracking
@@ -366,8 +366,13 @@ fun SearchTrackingAppBar(
 
 @Composable
 fun ButtonSectionTracking(
-    botones: List<String>
+    botones: List<String>,
+    conteoEstadoSolicitudData: EstadoSolicitudViewModel
 ) {
+    val dataCantidadEstado: ArrayList<Int> by conteoEstadoSolicitudData.dataEstadoForChart.observeAsState(initial =
+    arrayListOf()
+    )
+
     val context = LocalContext.current
 
     var selectedChipIndex by remember {
@@ -401,10 +406,10 @@ fun ButtonSectionTracking(
             }
         }
         if(selectedChipIndex==0){
-            PieChartScreen()
+            BarChartScreen(dataCantidadEstado)
         }else{
             if(selectedChipIndex==1){
-                BarChartScreen()
+                PieChartScreen()
             }else{
                 LineChartScreen()
             }
@@ -491,7 +496,7 @@ fun TrackingCard(topic: TrackingCard, navController: NavController, modifier: Mo
             Image(
                 painter = painterResource(id = topic.imageRes),
                 //contentDescription = stringResource(topic.name),
-                contentDescription = "Hola",
+                contentDescription = "imagen",
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .size(width = 40.dp, height = 40.dp),
@@ -685,13 +690,20 @@ fun LineChartScreen(){
 }
 
 @Composable
-fun BarChartScreen(){
+@Preview
+fun datapreview(){
+    BarChartScreen(arrayListOf(1,2,3,4))
+}
+
+@Composable
+fun BarChartScreen(dataCantidadEstado: ArrayList<Int>){
+    val label = listOf<String>("Pendiente", "Cotizado", "Observado", "Anulado")
     val stepSize = 5
     val barsData = DataUtils.getBarChartData(
-        listSize = 8,
-        maxRange = 8,
+        listSize = 7,
+        maxRange = 7,
         barChartType = BarChartType.VERTICAL,
-        dataCategoryOptions = DataCategoryOptions()
+        dataCategoryOptions = DataCategoryOptions(),
     )
 
     val xAxisData = AxisData.Builder()
@@ -720,20 +732,27 @@ fun BarChartScreen(){
         backgroundColor = MaterialTheme.colorScheme.surface
     )
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clip(MaterialTheme.shapes.medium)
-            .background(Color.Black)
-    ) {
-        BarChart(
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp),
-            barChartData = barChartData
-        )
+                .padding(16.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(Color.Black)
+        ) {
+            BarChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .width(50.dp)
+                    .align(Alignment.CenterHorizontally),
+                barChartData = barChartData
+            )
+        }
     }
+
 }
 
 @Composable
