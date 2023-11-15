@@ -3,8 +3,7 @@ from models.area_comun import AreaComun
 
 class AreaComunSchema(ma.SQLAlchemySchema):
     class Meta:
-        model = AreaComun
-        fields = ('id_area_comun', 'descripcion')
+        fields = ('id_predio', 'descripcion','area')
 
 areaComun_schema = AreaComunSchema()
 areasComunes_schema = AreaComunSchema(many=True)

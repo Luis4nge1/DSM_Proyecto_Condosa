@@ -24,7 +24,7 @@ informacion_solicitante_schema = InformacionSolicitanteSchema()
 
 
 @informacion_solicitante_routes.route("/informacion_solicitante", methods=["POST"])
-def create_InformacionSolicitante():
+def create_InformacionSolicitantes():
     try:
         data = request.json
         # Lógica para obtener la información de las tablas y construir un objeto InformacionSolicitante
