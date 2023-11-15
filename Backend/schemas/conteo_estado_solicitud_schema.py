@@ -10,3 +10,5 @@ class ConteoEstadoSolicitudSchema(ma.SQLAlchemySchema):
 
 conteo_estado_solicitud_schema = ConteoEstadoSolicitudSchema()
 conteo_estado_solicitud_schemas = ConteoEstadoSolicitudSchema(many=True)
+
+
