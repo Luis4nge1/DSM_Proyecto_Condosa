@@ -334,5 +334,5 @@ fun showToastInformation(context: Context, message: String) {
 @Composable
 fun InformationScreenPreview() {
     val navController = rememberNavController() // Importa rememberNavController
-    InformationScreen(navController = navController, body = "Ejemplo de id de solicitud") // Agrega un valor para el parámetro 'body'
+    InformationScreen(navController = navController, body = "123") // Agrega un valor para el parámetro 'body'
 }

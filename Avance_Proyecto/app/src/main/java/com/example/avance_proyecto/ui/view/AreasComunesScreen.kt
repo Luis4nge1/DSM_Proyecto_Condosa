@@ -11,6 +11,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -18,8 +21,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.avance_proyecto.data.model.AreasComunesItem
+import com.example.avance_proyecto.data.model.InformacionPredioItem
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
+import com.example.avance_proyecto.ui.viewmodel.AreasComunesViewModel
+import com.example.avance_proyecto.ui.viewmodel.InformacionPredioViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -28,6 +36,11 @@ fun InformacionAreasComunesScreen(
     onDimiss: ()->Unit,
     properties: DialogProperties=DialogProperties()
 ) {
+    val areasComunesViewModel: AreasComunesViewModel = viewModel()
+    areasComunesViewModel.getAreasComunes(idPredio)
+
+    val isLoading by areasComunesViewModel.isLoading.collectAsState()
+
     val popupWidth = 320.dp
     val popupHeight = 350.dp
 
@@ -68,11 +81,32 @@ fun InformacionAreasComunesScreen(
                     ),
                 )
 
-                InformacionAreasComunesContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                )
+                if(isLoading){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ){
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(50.dp)
+                        )
+                    }
+                }
+                else {
+                    val listInformacionSolicitante by areasComunesViewModel.idPredioResult.collectAsState()
+
+                    InformacionAreasComunesContent(
+                        listInformacionSolicitante,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp)
+                    )
+                }
+
+
+
             }
         }
     }
@@ -80,7 +114,11 @@ fun InformacionAreasComunesScreen(
 }
 
 @Composable
-fun InformacionAreasComunesContent(modifier: Modifier = Modifier) {
+fun InformacionAreasComunesContent(list: List<AreasComunesItem>, modifier: Modifier = Modifier) {
+
+    val areasComunes = list
+
+    /*
     // Lista de datos para las áreas comunes
     val areasComunes = listOf(
         AreaComun("Sala de estar", 50),
@@ -88,14 +126,15 @@ fun InformacionAreasComunesContent(modifier: Modifier = Modifier) {
         AreaComun("Terraza", 20),
         // Agrega más áreas comunes según sea necesario
     )
+    */
 
     LazyColumn(
         modifier = modifier
-            .background(Color.Gray) // Cambia el color de fondo de la pantalla
+            .background(Color.Gray) // El color de fondo de la pantalla
             .padding(16.dp)
     ) {
         items(areasComunes) { area ->
-            InformacionAreaComunCard(area)
+            InformacionAreaComunCard(areasComunes)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -106,7 +145,7 @@ fun CircleCloseButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(48.dp)
-            .padding(8.dp) // Ajusta el padding según tus preferencias
+            .padding(8.dp)
             .clickable { onClick() }
             .background(Color.White, shape = CircleShape)
     ) {
@@ -115,7 +154,7 @@ fun CircleCloseButton(onClick: () -> Unit) {
             contentDescription = "Cerrar",
             tint = Color.Black,
             modifier = Modifier
-                .padding(8.dp) // Ajusta el padding del icono según tus preferencias
+                .padding(8.dp)
                 .size(24.dp)
         )
     }
@@ -123,7 +162,7 @@ fun CircleCloseButton(onClick: () -> Unit) {
 
 
 @Composable
-fun InformacionAreaComunCard(areaComun: AreaComun) {
+fun InformacionAreaComunCard(list: List<AreasComunesItem>) {
     val popupWidth = 250.dp
     Card(
         modifier = Modifier
@@ -141,44 +180,52 @@ fun InformacionAreaComunCard(areaComun: AreaComun) {
                 modifier = Modifier
                     .padding(16.dp)
             ) {
-                Text(
-                    text = "Nombre del área: ${areaComun.nombre}",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
-        }
+                list.forEach { areaItem ->
+                    // Bloque para cada área común
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(8.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Descripción: ${areaItem.descripcion}",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                            Text(
+                                text = "Área: ${areaItem.area}",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                        }
+                    }
 
-        // Card para el área en metros cuadrados
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Área en m2: ${areaComun.areaM2}",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
+                    // Espacio entre tarjetas
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }
 }
 
 
-data class AreaComun(val nombre: String, val areaM2: Int)
-
+//data class AreaComun(val nombre: String, val areaM2: Int)
+/*
 @Preview
 @Composable
 fun InformacionAreasComunesPreview() {
     Avance_ProyectoTheme {
-        InformacionAreasComunesScreen(onDimiss = {}) // Provide any required parameters here
+        InformacionAreasComunesScreen(
+            idPredio = "123",
+            onDimiss = {}
+        )
     }
 }
+*/
