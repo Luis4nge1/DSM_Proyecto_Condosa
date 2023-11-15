@@ -6,7 +6,11 @@ import com.example.avance_proyecto.data.model.InformacionSolicitud
 import com.example.avance_proyecto.data.model.SolicitudesEstado
 import com.example.avance_proyecto.data.model.InformacionPredio
 import com.example.avance_proyecto.data.model.InformacionSolicitante
+import com.example.avance_proyecto.data.model.SolicitudEstadoSolDTO
+import com.example.avance_proyecto.data.model.SolicitudEstadoSolicitud
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 
 interface ApiService {
@@ -30,5 +34,8 @@ interface ApiService {
 
     @GET("/area_comun")
     suspend fun  listAreasComunesApiService(): AreasComunes
+
+    @POST("/informacion_solicitante")
+    suspend fun  insertInformacionSolicitanteApiService(@Body ses: SolicitudEstadoSolDTO): SolicitudEstadoSolicitud
 
 }

@@ -168,7 +168,7 @@ fun TrackingScreen(
                 .background(backgroundPrincipal)
                 .fillMaxSize()
         ) {
-            ButtonSectionTracking(listOf("Estados","Secciones","Evolución"), conteoEstadoSolicitudData)
+            ButtonSectionTracking(listOf("Estados","Secciones","Evolución"))
 
             //val datos = estadoSolicitudData
             val tracking = TrackingDefaultDataSource.itemCardTracking
@@ -367,11 +367,7 @@ fun SearchTrackingAppBar(
 @Composable
 fun ButtonSectionTracking(
     botones: List<String>,
-    conteoEstadoSolicitudData: EstadoSolicitudViewModel
 ) {
-    val dataCantidadEstado: ArrayList<Int> by conteoEstadoSolicitudData.dataEstadoForChart.observeAsState(initial =
-    arrayListOf()
-    )
 
     val context = LocalContext.current
 
@@ -406,7 +402,7 @@ fun ButtonSectionTracking(
             }
         }
         if(selectedChipIndex==0){
-            BarChartScreen(dataCantidadEstado)
+            BarChartScreen()
         }else{
             if(selectedChipIndex==1){
                 PieChartScreen()
@@ -689,14 +685,9 @@ fun LineChartScreen(){
     }
 }
 
-@Composable
-@Preview
-fun datapreview(){
-    BarChartScreen(arrayListOf(1,2,3,4))
-}
 
 @Composable
-fun BarChartScreen(dataCantidadEstado: ArrayList<Int>){
+fun BarChartScreen(){
     val label = listOf<String>("Pendiente", "Cotizado", "Observado", "Anulado")
     val stepSize = 5
     val barsData = DataUtils.getBarChartData(

@@ -22,9 +22,6 @@ class EstadoSolicitudViewModel : ViewModel() {
     private val _conteoEstadosolicitudResult = MutableLiveData<ConteoEstadoSolicitud>()
     val conteoEstadosolicitudResult: LiveData<ConteoEstadoSolicitud> = _conteoEstadosolicitudResult
 
-    private val _dataEstadoForChart = MutableLiveData<ArrayList<Int>>()
-    val dataEstadoForChart: LiveData<ArrayList<Int>> = _dataEstadoForChart
-
     private val _isError = mutableStateOf(false)
     val isError: State<Boolean> = _isError
 
@@ -46,40 +43,10 @@ class EstadoSolicitudViewModel : ViewModel() {
                 println("ALGO PASÓ")
                 _isError.value = true
             }
-            _dataEstadoForChart.value = getCantidadEstado()
             _isLoading.value = false
         }
     }
 
-    fun getCantidadEstado(): ArrayList<Int>{
-        val datoPendiente = _conteoEstadosolicitudResult.value?.filter { userData->
-            userData.descripcion.lowercase().equals("pendiente")
-        }
-        val cantidadPendiente = datoPendiente?.get(0)?.cantidad ?: 0
-
-        val datoCotizado = _conteoEstadosolicitudResult.value?.filter { userData->
-            userData.descripcion.lowercase().equals("cotizado")
-        }
-        val cantidadCotizado = datoCotizado?.get(0)?.cantidad ?: 0
-
-        val datoObservado = _conteoEstadosolicitudResult.value?.filter { userData->
-            userData.descripcion.lowercase().equals("observado")
-        }
-        val cantidadObservado = datoObservado?.get(0)?.cantidad ?: 0
-
-        val datoAnulado = _conteoEstadosolicitudResult.value?.filter { userData->
-            userData.descripcion.lowercase().equals("anulado")
-        }
-        val cantidadAnulado = datoAnulado?.get(0)?.cantidad ?: 0
-
-        val listaDeEstadoCantidad: ArrayList<Int> = arrayListOf(
-            cantidadPendiente,
-            cantidadCotizado,
-            cantidadObservado,
-            cantidadAnulado
-        )
-        return listaDeEstadoCantidad
-    }
 
     fun updateIsError(value: Boolean) {
         _isError.value = value
