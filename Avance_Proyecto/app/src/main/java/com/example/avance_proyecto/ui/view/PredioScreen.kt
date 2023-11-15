@@ -1,4 +1,3 @@
-// SolicitanteScreen.kt
 package com.example.avance_proyecto.ui.view
 
 import androidx.compose.foundation.background
@@ -23,21 +22,22 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.avance_proyecto.data.model.InformacionPredioItem
-import com.example.avance_proyecto.data.model.InformacionSolicitanteItem
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
-import com.example.avance_proyecto.ui.viewmodel.InformacionSolicitanteViewModel
+import com.example.avance_proyecto.ui.viewmodel.InformacionPredioViewModel
+
 
 @Composable
-fun SolicitanteContent(
-    idSolicitante:String,
+fun PredioContent(
+    idPredio:String,
     onDimiss: ()->Unit,
     properties: DialogProperties=DialogProperties()
 ) {
-    val informacionSolicitanteViewModel: InformacionSolicitanteViewModel = viewModel()
-    informacionSolicitanteViewModel.getInformacionSolicitante(idSolicitante)
 
-    val isLoading by informacionSolicitanteViewModel.isLoading.collectAsState()
+    val informacionPredioViewModel: InformacionPredioViewModel = viewModel()
+    informacionPredioViewModel.getInformacionPredio(idPredio)
+
+    val isLoading by informacionPredioViewModel.isLoading.collectAsState()
 
     val popupWidth = 320.dp
     val popupHeight = 500.dp
@@ -62,7 +62,7 @@ fun SolicitanteContent(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Información del Solicitante",
+                            text = "Información del Predio",
                             color = Color.White,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold
@@ -70,7 +70,7 @@ fun SolicitanteContent(
                         )
                     },
                     navigationIcon = {
-                        CircleCButton(onDimiss)
+                        CircleAButton(onDimiss)
                     },
                     modifier = Modifier.background(backgroundPrincipal),
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -90,10 +90,10 @@ fun SolicitanteContent(
                         )
                     }
                 }
-
                 else {
-                    val listInformacionSolicitante by informacionSolicitanteViewModel.idSolicitanteResult.collectAsState()
-                    SolicitanteDetailsContent(
+                    val listInformacionSolicitante by informacionPredioViewModel.idPredioResult.collectAsState()
+
+                    PredioDetailsContent(
                         listInformacionSolicitante,
                         modifier = Modifier
                             .fillMaxSize()
@@ -107,7 +107,7 @@ fun SolicitanteContent(
 }
 
 @Composable
-fun SolicitanteDetailsContent(list: List<InformacionSolicitanteItem>,modifier: Modifier = Modifier) {
+fun PredioDetailsContent(list: List<InformacionPredioItem>,modifier: Modifier = Modifier) {
     // Lista de datos para los detalles del solicitante
     val solicitantes = list
 
@@ -117,14 +117,14 @@ fun SolicitanteDetailsContent(list: List<InformacionSolicitanteItem>,modifier: M
             .padding(16.dp)
     ) {
         items(solicitantes) { solicitante ->
-            SolicitanteCard(list)
+            PredioCard(solicitantes)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
+fun PredioCard(list: List<InformacionPredioItem>) {
     val popupWidth = 250.dp
     Card(
         modifier = Modifier
@@ -137,14 +137,14 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
+            //.padding(bottom = 8.dp) // Agrega espacio entre las cards
         ) {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Nombre: ${list.firstOrNull()?.Nombre} ",
+                    text = "Nombre: ${list.firstOrNull()?.nombrePredio} ",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
@@ -157,14 +157,14 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
+            //.padding(bottom = 8.dp) // Agrega espacio entre las cards
         ) {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Apellido paterno: ${list.firstOrNull()?.apellido_paterno}",
+                    text = "RUC: ${list.firstOrNull()?.ruc}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
@@ -177,14 +177,14 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
+            //.padding(bottom = 8.dp) // Agrega espacio entre las cards
         ) {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Apellido materno: ${list.firstOrNull()?.apellido_materno}",
+                    text = "Tipo Condominio: ${list.firstOrNull()?.tipoPredio}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
@@ -197,48 +197,7 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = "Tipo de Documento: ${list.firstOrNull()?.tipo_documento}",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
-        }
-
-        // Card para el número de documento
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = "N° de Documento: ${list.firstOrNull()?.numero_documento}",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
-        }
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
+            //.padding(bottom = 8.dp) // Agrega espacio entre las cards
         ) {
             Column(
                 modifier = Modifier
@@ -253,19 +212,20 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
             }
         }
 
+        // Card para el número de documento
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
+            //.padding(bottom = 8.dp) // Agrega espacio entre las cards
         ) {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "N° de contacto:  ${list.firstOrNull()?.numero_contacto}",
+                    text = "N° de Contacto: ${list.firstOrNull()?.telefono}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
@@ -278,7 +238,7 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
+            //.padding(bottom = 8.dp) // Agrega espacio entre las cards
         ) {
             Column(
                 modifier = Modifier
@@ -298,7 +258,7 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(6.dp)
-                //.padding(bottom = 8.dp) // Agrega espacio entre las cards
+            //.padding(bottom = 8.dp) // Agrega espacio entre las cards
         ) {
             Column(
                 modifier = Modifier
@@ -318,9 +278,8 @@ fun SolicitanteCard(list: List<InformacionSolicitanteItem>) {
 
 
 
-
 @Composable
-fun CircleCButton(onClick: () -> Unit) {
+fun CircleAButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(48.dp)
@@ -341,9 +300,8 @@ fun CircleCButton(onClick: () -> Unit) {
 /*
 @Preview
 @Composable
-fun SolicitantePreview() {
+fun PredioContent() {
     Avance_ProyectoTheme {
         SolicitanteContent(onDimiss = {})
     }
-}
-*/
+}*/

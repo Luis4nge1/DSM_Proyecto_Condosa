@@ -11,12 +11,16 @@ from sqlalchemy import text
 solicitudes_estado_routes = Blueprint("solicitudes_estado_routes", __name__)
 
 @solicitudes_estado_routes.route("/solicitudes_estado", methods=["GET"])
-def obtener_informacion_predio():
+def obtener_informacion_estado():
     if request.method == "GET":
         try:
             response = []
                 
-                           
+                #Solicitud.id_solicitante,
+                #Solicitud.id_solicitud,
+                #Solicitud.id_servicio,
+                
+                
             # Ejecutar la consulta utilizando SQLAlchemy
             data = (db.session.query(
                 Solicitud.nombre_solicitante,

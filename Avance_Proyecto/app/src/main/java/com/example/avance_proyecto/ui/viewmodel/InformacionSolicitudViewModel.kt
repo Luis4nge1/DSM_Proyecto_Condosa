@@ -25,11 +25,13 @@ class InformacionSolicitudViewModel: ViewModel() {
     private val _idSolcitudResult = MutableStateFlow(listOf<InformacionSolicitudItem>())
     val idSolcitudResult = _idSolcitudResult.asStateFlow()
 
+
     private val _isError = mutableStateOf(false)
     val isError: State<Boolean> = _isError
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
+
     /*init{
         getInformacionSolicitud()
     }*/

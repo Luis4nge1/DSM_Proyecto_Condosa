@@ -3,6 +3,8 @@ import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
 import com.example.avance_proyecto.data.model.EstadoSolicitud
 import com.example.avance_proyecto.data.model.InformacionSolicitud
 import com.example.avance_proyecto.data.model.SolicitudesEstado
+import com.example.avance_proyecto.data.model.InformacionPredio
+import com.example.avance_proyecto.data.model.InformacionSolicitante
 import retrofit2.http.GET
 
 
@@ -19,5 +21,9 @@ interface ApiService {
 
     @GET("/informacion_solicitud")
     suspend fun  listInformacionSolicitudApiService(): InformacionSolicitud
+    @GET("/inform_predio")
+    suspend fun  listInformacionPredioApiService(): InformacionPredio
 
+    @GET("/informacion_solicitante")
+    suspend fun  listInformacionSolicitanteApiService(): InformacionSolicitante
 }

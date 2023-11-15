@@ -44,12 +44,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.avance_proyecto.data.TrackingDefaultDataSource
+import com.example.avance_proyecto.data.model.InformacionSolicitudItem
 import com.example.avance_proyecto.ui.viewmodel.InformationViewModel
 import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
 import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 import com.example.avance_proyecto.ui.viewmodel.InformacionSolicitudViewModel
+import com.example.avance_proyecto.ui.viewmodel.InformacionPredioViewModel
 
 
 @Composable
@@ -72,7 +74,9 @@ fun InformationScreen(
 
     val informacionSolicitudViewModel: InformacionSolicitudViewModel = viewModel()
 
+
     val isLoading by informacionSolicitudViewModel.isLoading.collectAsState()
+
 
     informacionSolicitudViewModel.getInformacionSolicitud(body) // Filtrar los datos según la id
 
@@ -115,7 +119,8 @@ fun InformationScreen(
                     tracking.forEach { it->
                         CardInformation(label = stringResource(it.labelData) , data = it.valueData)
                     }
-                    ButtonSectionDetails(listOf("Áreas Comunes", "Solicitante", "Predio"), "Ver detalles en:")
+                    ButtonSectionDetails(listInformacionSolicitante,listOf("Predio", "Solicitante", "Áreas Comunes"), "Ver detalles en:")
+
                     ButtonSectionOption(listOf("Cotizar", "Observar", "Anular"), "Seleccionar opción:")
                 }
 
@@ -190,6 +195,7 @@ fun CardInformation(label: String, data: String){
 
 @Composable
 fun ButtonSectionDetails(
+    list: List<InformacionSolicitudItem>,
     botones: List<String>, title: String
 ) {
     val context = LocalContext.current
@@ -235,12 +241,14 @@ fun ButtonSectionDetails(
     }
 
     if(showDialog && selectedButtonIndex == 0){
-        InformacionAreasComunesScreen(
+        PredioContent(
+            list.firstOrNull()?.id_predio?: "",
             onDimiss = { showDialog = false }
         )
     }
     if(showDialog && selectedButtonIndex == 1){
         SolicitanteContent(
+            list.firstOrNull()?.id_solicitante?:"",
             onDimiss = { showDialog = false }
         )
     }
