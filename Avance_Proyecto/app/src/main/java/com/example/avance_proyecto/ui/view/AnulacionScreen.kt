@@ -23,11 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.avance_proyecto.data.model.SolicitudEstadoSolDTO
 import com.example.avance_proyecto.ui.theme.Avance_ProyectoTheme
 import com.example.avance_proyecto.ui.theme.BackgroundRed
 import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
 import com.example.avance_proyecto.ui.theme.TextWhite
+import com.example.avance_proyecto.ui.viewmodel.SolicitudEstSolViewModel
 
 @Composable
 fun AnulacionScreen(
@@ -35,6 +37,8 @@ fun AnulacionScreen(
     onPositiveButtonClicked: ()->Unit,
     onNegativeButtonClicked: ()->Unit,
     properties: DialogProperties = DialogProperties(),
+    solicitudEstSolViewModel: SolicitudEstSolViewModel,
+    insertarDataDTO : SolicitudEstadoSolDTO,
     modifier: Modifier = Modifier
 ) {
     val popupWidth = 300.dp
@@ -72,7 +76,9 @@ fun AnulacionScreen(
                     Button(
                         onClick = {
                             // Acción para continuar
+                            solicitudEstSolViewModel.insertProduct(insertarDataDTO)
                             onPositiveButtonClicked()
+
                         },
                         colors = ButtonDefaults.buttonColors(
                             ButtonColorDefault,
@@ -114,7 +120,7 @@ fun buildAnulacionText(): AnnotatedString {
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun AnulacionScreenPreview() {
     Avance_ProyectoTheme {
@@ -124,4 +130,4 @@ fun AnulacionScreenPreview() {
             onNegativeButtonClicked = {}
         )
     }
-}
+}*/

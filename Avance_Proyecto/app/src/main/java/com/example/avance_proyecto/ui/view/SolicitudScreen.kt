@@ -225,25 +225,29 @@ fun SolicitudScreen(navController: NavController, body: String) {
                             SolicitudList(
                                 navController = navController,
                                 heroes = dataPendiente,
-                                contentPadding = it
+                                contentPadding = it,
+                                body1 = "0"
                             )
                         }
                         1 -> {
                             SolicitudList(navController = navController,
                                 heroes = dataCotizado,
-                                contentPadding = it
+                                contentPadding = it,
+                                body1 = "1"
                             )
                         }
                         2 -> {
                             SolicitudList(navController = navController,
                                 heroes = dataObservado,
-                                contentPadding = it
+                                contentPadding = it,
+                                body1 = "2"
                             )
                         }
                         3 -> {
                             SolicitudList(navController = navController,
                                 heroes = dataAnulado,
-                                contentPadding = it
+                                contentPadding = it,
+                                body1 = "3"
                             )
                         }
                     }
@@ -336,6 +340,7 @@ fun SolicitudList(
     navController: NavController,
     heroes: List<SolicitudesEstadoItem>,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    body1: String,
     modifier: Modifier = Modifier
 ) {
     val visibleState = remember {
@@ -371,7 +376,7 @@ fun SolicitudList(
                         hero = hero,
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clickable { navController.navigate(route = AppScreen.informationScreen.route+"/"+hero.id_solicitud) } // Llamar a la función que se necesite cuando se hace clic al elemento
+                            .clickable { navController.navigate(route = AppScreen.informationScreen.route+"/"+hero.id_solicitud+"/"+body1) } // Llamar a la función que se necesite cuando se hace clic al elemento
                             // Animate each list item to slide in vertically
                             .animateEnterExit(
                                 enter = slideInVertically(

@@ -71,7 +71,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import co.yml.charts.axis.AxisData
+/*import co.yml.charts.axis.AxisData
 import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.common.model.Point
@@ -92,7 +92,7 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
-import co.yml.charts.ui.piechart.models.PieChartData
+import co.yml.charts.ui.piechart.models.PieChartData*/
 import com.example.avance_proyecto.R
 import com.example.avance_proyecto.data.TrackingDefaultDataSource
 import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
@@ -401,7 +401,7 @@ fun ButtonSectionTracking(
 
             }
         }
-        if(selectedChipIndex==0){
+        /*if(selectedChipIndex==0){
             BarChartScreen()
         }else{
             if(selectedChipIndex==1){
@@ -409,7 +409,7 @@ fun ButtonSectionTracking(
             }else{
                 LineChartScreen()
             }
-        }
+        }*/
     }
 }
 
@@ -602,7 +602,7 @@ fun TrackingCuadricula(
 
     }
 }
-
+/*
 @Composable
 fun LineChartScreen(){
 
@@ -786,7 +786,7 @@ fun PieChartScreen(){
         )
     }
 
-}
+}*/
 
 fun showToastTracking(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

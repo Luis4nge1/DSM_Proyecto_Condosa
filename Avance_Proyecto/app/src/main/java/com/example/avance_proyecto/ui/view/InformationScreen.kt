@@ -1,5 +1,6 @@
 package com.example.avance_proyecto.ui.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -45,6 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.avance_proyecto.data.TrackingDefaultDataSource
 import com.example.avance_proyecto.data.model.InformacionSolicitudItem
+import com.example.avance_proyecto.data.model.SolicitudEstadoSolDTO
 import com.example.avance_proyecto.ui.viewmodel.InformationViewModel
 import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
@@ -52,31 +54,28 @@ import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 import com.example.avance_proyecto.ui.viewmodel.InformacionSolicitudViewModel
 import com.example.avance_proyecto.ui.viewmodel.InformacionPredioViewModel
+import com.example.avance_proyecto.ui.viewmodel.SolicitudEstSolViewModel
+import java.time.LocalDate
 
 
 @Composable
 fun InformationScreen(
     navController: NavController,
-    body: String
+    body: String,
+    body1: String
 ){
-    //Con el body, tienes la id de la solicitud
-    println("information_screen: "+body)
-
-    /*
-    val id: Int = try {
-        body.toInt()
-    } catch (e: NumberFormatException) {
-        println("Error al convertir la cadena a entero: $e")
-        -1 // Valor predeterminado, pero podría ser cualquier cosa que tenga sentido en tu caso.
-    }
-    */
-    //println("information_screen: "+id)
 
     val informacionSolicitudViewModel: InformacionSolicitudViewModel = viewModel()
+
+    val solicitudEstSolViewModel: SolicitudEstSolViewModel = viewModel()
 
 
     val isLoading by informacionSolicitudViewModel.isLoading.collectAsState()
 
+    val idSolicitud: Int = body.toInt()
+    val idEstado: Int = body1.toInt()
+
+    val insertarDataDTO : SolicitudEstadoSolDTO =SolicitudEstadoSolDTO(LocalDate.now(),idSolicitud, idEstado, "S")
 
     informacionSolicitudViewModel.getInformacionSolicitud(body) // Filtrar los datos según la id
 
@@ -121,7 +120,12 @@ fun InformationScreen(
                     }
                     ButtonSectionDetails(listInformacionSolicitante,listOf("Predio", "Solicitante", "Áreas Comunes"), "Ver detalles en:")
 
-                    ButtonSectionOption(listOf("Cotizar", "Observar", "Anular"), "Seleccionar opción:")
+                    ButtonSectionOption(listOf("Cotizar", "Observar", "Anular"),
+                        "Seleccionar opción:",
+                        body1,
+                        solicitudEstSolViewModel,
+                        insertarDataDTO
+                    )
                 }
 
             }
@@ -263,12 +267,19 @@ fun ButtonSectionDetails(
 
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun ButtonSectionOption(
-    botones: List<String>, title: String
+    botones: List<String>, title: String,
+    body1: String,
+    solicitudEstSolViewModel: SolicitudEstSolViewModel,
+    insertarDataDTO : SolicitudEstadoSolDTO
 ) {
+
+
     val context = LocalContext.current
     //val gameUiState by popUpViewModel.uiState.collectAsState()
+    var activeButton by mutableStateOf(true)
 
     var selectedButtonIndex by remember {
         mutableStateOf(0)
@@ -291,7 +302,13 @@ fun ButtonSectionOption(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             items(botones.size) {
+                if(body1 == "1"){
+                    activeButton = false
+                }
+                activeButton = !(body1 == "3" && it == 2)
+                activeButton = !(body1 == "2" && it == 1)
                 Button(
+                    enabled = activeButton ,
                     onClick = {
                         showToastInformation(context, botones[it])
                         selectedButtonIndex = it
@@ -321,7 +338,9 @@ fun ButtonSectionOption(
             properties = DialogProperties(
                 dismissOnBackPress = false,
                 dismissOnClickOutside = false
-            )
+            ),
+            solicitudEstSolViewModel,
+            insertarDataDTO
         )
     }
 }
@@ -334,5 +353,5 @@ fun showToastInformation(context: Context, message: String) {
 @Composable
 fun InformationScreenPreview() {
     val navController = rememberNavController() // Importa rememberNavController
-    InformationScreen(navController = navController, body = "123") // Agrega un valor para el parámetro 'body'
+    InformationScreen(navController = navController, body = "123", body1 = "0") // Agrega un valor para el parámetro 'body'
 }

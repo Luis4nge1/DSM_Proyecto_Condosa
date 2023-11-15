@@ -27,10 +27,10 @@ fun AppNavigation(){
             val body = it.arguments?.getString("body") ?: "0"
             SolicitudScreen(navController,body)
         }
-        composable(route = AppScreen.informationScreen.route +"/{body}"){
+        composable(route = AppScreen.informationScreen.route +"/{body}/{body1}"){
             val body = it.arguments?.getString("body") ?: "0"
-            InformationScreen(navController,body)
-            println("\nApp navigation id solicitud: $body")
+            val body1 = it.arguments?.getString("body1") ?: "0"
+            InformationScreen(navController,body,body1)
         }
     }
 }
