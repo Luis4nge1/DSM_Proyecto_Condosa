@@ -253,6 +253,14 @@ fun ButtonSectionDetails(
         )
     }
 
+    if(showDialog && selectedButtonIndex == 2){
+        InformacionAreasComunesScreen(
+            list.firstOrNull()?.id_predio?:"",
+            onDimiss = { showDialog = false }
+        )
+    }
+
+
 }
 
 @Composable

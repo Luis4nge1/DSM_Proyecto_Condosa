@@ -1,4 +1,5 @@
 package com.example.avance_proyecto.network
+import com.example.avance_proyecto.data.model.AreasComunes
 import com.example.avance_proyecto.data.model.ConteoEstadoSolicitud
 import com.example.avance_proyecto.data.model.EstadoSolicitud
 import com.example.avance_proyecto.data.model.InformacionSolicitud
@@ -26,4 +27,8 @@ interface ApiService {
 
     @GET("/informacion_solicitante")
     suspend fun  listInformacionSolicitanteApiService(): InformacionSolicitante
+
+    @GET("/area_comun")
+    suspend fun  listAreasComunesApiService(): AreasComunes
+
 }

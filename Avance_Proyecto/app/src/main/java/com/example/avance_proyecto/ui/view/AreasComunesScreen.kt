@@ -24,9 +24,9 @@ import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InformacionAreasComunesScreen(
+    idPredio:String,
     onDimiss: ()->Unit,
-    properties: DialogProperties = DialogProperties(),
-    modifier: Modifier = Modifier
+    properties: DialogProperties=DialogProperties()
 ) {
     val popupWidth = 320.dp
     val popupHeight = 350.dp
