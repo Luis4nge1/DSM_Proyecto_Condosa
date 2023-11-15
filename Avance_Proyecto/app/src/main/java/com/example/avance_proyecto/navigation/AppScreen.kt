@@ -1,7 +1,7 @@
 package com.example.avance_proyecto.navigation
 
 sealed class AppScreen(val route: String){
-    object inicioScreen: AppScreen("inicio")
+    object splahScreen: AppScreen("splash")
     object homeScreen: AppScreen("home")
     object trackingScreen: AppScreen("tracking")
     object solicitudScreen: AppScreen("solicitud")
