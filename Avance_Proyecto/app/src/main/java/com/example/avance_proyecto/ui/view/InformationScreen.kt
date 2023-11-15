@@ -55,6 +55,7 @@ import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 import com.example.avance_proyecto.ui.viewmodel.InformacionSolicitudViewModel
 import com.example.avance_proyecto.ui.viewmodel.InformacionPredioViewModel
 import com.example.avance_proyecto.ui.viewmodel.SolicitudEstSolViewModel
+import java.sql.Date
 import java.time.LocalDate
 
 
@@ -75,7 +76,7 @@ fun InformationScreen(
     val idSolicitud: Int = body.toInt()
     val idEstado: Int = body1.toInt()
 
-    val insertarDataDTO : SolicitudEstadoSolDTO =SolicitudEstadoSolDTO(LocalDate.now(),idSolicitud, idEstado, "S")
+    val insertarDataDTO : SolicitudEstadoSolDTO =SolicitudEstadoSolDTO("2023-11-15",idSolicitud, idEstado, "S")
 
     informacionSolicitudViewModel.getInformacionSolicitud(body) // Filtrar los datos según la id
 
