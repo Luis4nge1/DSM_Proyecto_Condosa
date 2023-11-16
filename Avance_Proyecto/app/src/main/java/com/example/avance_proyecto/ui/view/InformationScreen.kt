@@ -47,17 +47,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.avance_proyecto.data.TrackingDefaultDataSource
 import com.example.avance_proyecto.data.model.InformacionSolicitudItem
 import com.example.avance_proyecto.data.model.SolicitudEstadoSolDTO
-import com.example.avance_proyecto.ui.viewmodel.InformationViewModel
 import com.example.avance_proyecto.ui.theme.ButtonColorDefault
 import com.example.avance_proyecto.ui.theme.ButtonColorRed
 import com.example.avance_proyecto.ui.theme.TextWhite
 import com.example.avance_proyecto.ui.theme.backgroundPrincipal
 import com.example.avance_proyecto.ui.viewmodel.InformacionSolicitudViewModel
-import com.example.avance_proyecto.ui.viewmodel.InformacionPredioViewModel
 import com.example.avance_proyecto.ui.viewmodel.SolicitudEstSolViewModel
-import java.sql.Date
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 @Composable
@@ -71,13 +69,14 @@ fun InformationScreen(
 
     val solicitudEstSolViewModel: SolicitudEstSolViewModel = viewModel()
 
-
     val isLoading by informacionSolicitudViewModel.isLoading.collectAsState()
 
     val idSolicitud: Int = body.toInt()
     val idEstado: Int = body1.toInt()
 
-    val insertarDataDTO : SolicitudEstadoSolDTO =SolicitudEstadoSolDTO(LocalDateTime.now(),idSolicitud, idEstado, "S")
+    val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a", Locale.ENGLISH)
+    val fechayHora = LocalDateTime.now().format(formato)
+    val insertarDataDTO : SolicitudEstadoSolDTO =SolicitudEstadoSolDTO(fechayHora,idSolicitud, idEstado, "S")
 
     informacionSolicitudViewModel.getInformacionSolicitud(body) // Filtrar los datos según la id
 
@@ -228,7 +227,7 @@ fun ButtonSectionDetails(
             items(botones.size) {
                 Button(
                     onClick = {
-                        showToastInformation(context, botones[it])
+                        //showToastInformation(context, botones[it])
                         selectedButtonIndex = it
                         showDialog = true
                     },
@@ -302,15 +301,10 @@ fun ButtonSectionOption(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             items(botones.size) {
-                if(body1 == "1"){
-                    activeButton = false
-                }
-                activeButton = !(body1 == "3" && it == 2)
-                activeButton = !(body1 == "2" && it == 1)
                 Button(
                     enabled = activeButton ,
                     onClick = {
-                        showToastInformation(context, botones[it])
+                        //showToastInformation(context, botones[it])
                         selectedButtonIndex = it
                         showDialog = true
                     },
@@ -331,6 +325,7 @@ fun ButtonSectionOption(
     }
 
     if(showDialog && selectedButtonIndex == 2){
+        println("HOLAAAAAAAAA")
         AnulacionScreen(
             onDimiss = { showDialog = false },
             onPositiveButtonClicked = { showDialog = false },
@@ -341,6 +336,7 @@ fun ButtonSectionOption(
             ),
             solicitudEstSolViewModel,
             insertarDataDTO
+
         )
     }
 }

@@ -35,7 +35,7 @@ interface ApiService {
     @GET("/area_comun")
     suspend fun  listAreasComunesApiService(): AreasComunes
 
-    @POST("/informacion_solicitante")
+    @POST("/solicitud_est_solicit")
     suspend fun  insertInformacionSolicitanteApiService(@Body ses: SolicitudEstadoSolDTO): SolicitudEstadoSolicitud
 
 }

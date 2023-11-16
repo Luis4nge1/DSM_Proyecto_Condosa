@@ -78,7 +78,7 @@ fun AnulacionScreen(
                             // Acción para continuar
                             solicitudEstSolViewModel.insertProduct(insertarDataDTO)
                             onPositiveButtonClicked()
-
+                            println("LISTOOOOOOO")
                         },
                         colors = ButtonDefaults.buttonColors(
                             ButtonColorDefault,

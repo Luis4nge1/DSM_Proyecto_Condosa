@@ -101,7 +101,8 @@ class SolicitudesEstadoViewModel : ViewModel() {
             userData.nombre_solicitante.lowercase().contains(search.toString().lowercase()) ||
                     userData.departamento.lowercase().contains(search.toString().lowercase()) ||
                     userData.provincia.lowercase().contains(search.toString().lowercase()) ||
-                    userData.distrito.lowercase().contains(search.toString().lowercase())
+                    userData.distrito.lowercase().contains(search.toString().lowercase()) ||
+                    userData.fecha.lowercase().contains(search.toString().lowercase())
         }
         println("data "+search+" "+_filtradoPendiente.value)
     }
@@ -111,7 +112,8 @@ class SolicitudesEstadoViewModel : ViewModel() {
             userData.nombre_solicitante.lowercase().contains(search.toString().lowercase()) ||
                     userData.departamento.lowercase().contains(search.toString().lowercase()) ||
                     userData.provincia.lowercase().contains(search.toString().lowercase()) ||
-                    userData.distrito.lowercase().contains(search.toString().lowercase())
+                    userData.distrito.lowercase().contains(search.toString().lowercase()) ||
+                    userData.fecha.lowercase().contains(search.toString().lowercase())
         }
     }
 
@@ -120,7 +122,8 @@ class SolicitudesEstadoViewModel : ViewModel() {
             userData.nombre_solicitante.lowercase().contains(search.toString().lowercase()) ||
                     userData.departamento.lowercase().contains(search.toString().lowercase()) ||
                     userData.provincia.lowercase().contains(search.toString().lowercase()) ||
-                    userData.distrito.lowercase().contains(search.toString().lowercase())
+                    userData.distrito.lowercase().contains(search.toString().lowercase()) ||
+                    userData.fecha.lowercase().contains(search.toString().lowercase())
         }
     }
 
@@ -129,7 +132,8 @@ class SolicitudesEstadoViewModel : ViewModel() {
             userData.nombre_solicitante.lowercase().contains(search.toString().lowercase()) ||
                     userData.departamento.lowercase().contains(search.toString().lowercase()) ||
                     userData.provincia.lowercase().contains(search.toString().lowercase()) ||
-                    userData.distrito.lowercase().contains(search.toString().lowercase())
+                    userData.distrito.lowercase().contains(search.toString().lowercase()) ||
+                    userData.fecha.lowercase().contains(search.toString().lowercase())
         }
     }
 
