@@ -58,6 +58,7 @@ app.register_blueprint(informacion_solicitante_routes)
 app.register_blueprint(informacion_solicitud_routes)
 app.register_blueprint(inform_predio)
 app.register_blueprint(solicitud_es_soli)
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+  app.run(port=5000)
 

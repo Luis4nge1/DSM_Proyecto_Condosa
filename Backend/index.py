@@ -1,4 +1,4 @@
-from app import app
+from main import app
 from utils.db import db
 from utils.ma import ma
 
