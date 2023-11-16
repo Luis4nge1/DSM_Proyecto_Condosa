@@ -13,9 +13,9 @@ class SolicitudEstSolViewModel: ViewModel() {
     fun insertProduct(sesDTO : SolicitudEstadoSolDTO){
         viewModelScope.launch {
             datosUseCase.insertSolEstadoSolicitud(sesDTO).onSuccess {
-                println("PRODUCTO AGREGADO CORRECTAMENTE")
+                println("AGREGADO CORRECTAMENTE")
             }.onFailure {
-                println("HUBO UN ERROR AL AGREGAR EL PRODUCTO")
+                println("HUBO UN ERROR AL AGREGAR")
             }
         }
 

@@ -57,6 +57,7 @@ import com.example.avance_proyecto.ui.viewmodel.InformacionPredioViewModel
 import com.example.avance_proyecto.ui.viewmodel.SolicitudEstSolViewModel
 import java.sql.Date
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 @Composable
@@ -76,11 +77,9 @@ fun InformationScreen(
     val idSolicitud: Int = body.toInt()
     val idEstado: Int = body1.toInt()
 
-    val insertarDataDTO : SolicitudEstadoSolDTO =SolicitudEstadoSolDTO("2023-11-15",idSolicitud, idEstado, "S")
+    val insertarDataDTO : SolicitudEstadoSolDTO =SolicitudEstadoSolDTO(LocalDateTime.now(),idSolicitud, idEstado, "S")
 
     informacionSolicitudViewModel.getInformacionSolicitud(body) // Filtrar los datos según la id
-
-    //println("Lista: $listInformacionSolicitante")
 
     Scaffold(
         topBar = {
